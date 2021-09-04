@@ -1,47 +1,31 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import humps from 'humps';
 
-export type ResponseData = {
-  [key: string]: any;
-};
-
-export type ErrorResponse = {
+export type GeneralError = {
+  message: string;
+  path: string;
   status: number;
-  data: {
-    [key: string]: any;
-  };
+  timeStamp: Date;
 };
 
-export type ReqInterceptorType = (
+export const requestSnakeCased = (
   request: AxiosRequestConfig,
-) => Promise<AxiosRequestConfig>;
-
-export const requestSnakeCased: ReqInterceptorType = async request => {
-  const data = request?.data;
-  const snakeCasedData = humps.decamelizeKeys(data);
-  return { ...request, data: snakeCasedData };
-};
+): AxiosRequestConfig => ({
+  ...request,
+  data: humps.decamelizeKeys(request?.data),
+});
 
 export const responseCamelCasedSuccess = (
   response: AxiosResponse,
-): AxiosResponse => {
-  const data: ResponseData = response?.data;
-  const camelCasedData: ResponseData = humps.camelizeKeys(data);
-  return { ...response, data: camelCasedData };
-};
+): AxiosResponse => ({
+  ...response,
+  data: humps.camelizeKeys(response?.data),
+});
 
 export const responseCamelCasedError = (
-  error: AxiosError,
-): Promise<ErrorResponse> => {
-  const data: ResponseData = error.response?.data;
-  const camelCasedData = humps.camelizeKeys(data);
-  const errorResponse = {
-    status: error.response?.status,
-    data: camelCasedData,
-  };
-
-  return Promise.reject(errorResponse);
-};
+  error: AxiosError<GeneralError>,
+): Promise<GeneralError> =>
+  Promise.reject(humps.camelizeKeys(error.response?.data as object));
 
 const guestApi = axios.create({
   baseURL: 'http://localhost:8080/api/v1',
