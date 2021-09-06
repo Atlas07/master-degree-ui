@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { signIn } from '../api/authorization';
-import { GeneralError } from '../api/guestApi';
+import { ErrorResponse } from '../api/guestApi';
 
 const Login = () => {
   const history = useHistory();
@@ -28,7 +28,7 @@ const Login = () => {
         localStorage.setItem('token', res.token);
         history.push('/dashboard');
       })
-      .catch((err: GeneralError) => setError(err.message));
+      .catch((err: ErrorResponse) => setError(err.message));
   };
 
   const handleInputChange =

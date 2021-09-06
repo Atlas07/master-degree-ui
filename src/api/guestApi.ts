@@ -1,13 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import humps from 'humps';
 
-export type GeneralError = {
-  message: string;
-  path: string;
-  status: number;
-  timeStamp: Date;
-};
-
 export const requestSnakeCased = (
   request: AxiosRequestConfig,
 ): AxiosRequestConfig => ({
@@ -23,8 +16,8 @@ export const responseCamelCasedSuccess = (
 });
 
 export const responseCamelCasedError = (
-  error: AxiosError<GeneralError>,
-): Promise<GeneralError> =>
+  error: AxiosError<ErrorResponse | ValidationErrorResponse>,
+): Promise<ErrorResponse | ValidationErrorResponse> =>
   Promise.reject(humps.camelizeKeys(error.response?.data as object));
 
 const guestApi = axios.create({
@@ -41,3 +34,22 @@ guestApi.interceptors.response.use(
 );
 
 export default guestApi;
+
+export type Violation = {
+  fieldName: string;
+  message: string;
+};
+
+export type AbstractErrorResponse = {
+  status: number;
+  timeStamp: string;
+  path: string;
+};
+
+export type ErrorResponse = AbstractErrorResponse & {
+  message: string;
+};
+
+export type ValidationErrorResponse = AbstractErrorResponse & {
+  violations: Violation[];
+};

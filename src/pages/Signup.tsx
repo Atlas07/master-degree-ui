@@ -1,11 +1,21 @@
+import * as R from 'ramda';
 import { FormEvent, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { signUp } from '../api/authorization';
+import { ValidationErrorResponse, Violation } from '../api/guestApi';
+
 type ChangeFormEvent = FormEvent<
   HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
 >;
+
+const formatViolationsErr = R.reduce<Violation, string>(
+  (acc, violation) =>
+    acc.concat(`${violation.fieldName}: ${violation.message} \n`),
+  '',
+);
 
 const Signup = () => {
   const history = useHistory();
@@ -26,7 +36,11 @@ const Signup = () => {
     }
 
     setIsValidated(true);
-    // TODO: signup user
+    signUp({ username, password, email, role: [role] })
+      .then(() => history.push('/login'))
+      .catch((err: ValidationErrorResponse) =>
+        setError(formatViolationsErr(err.violations)),
+      );
   };
 
   return (
