@@ -12,7 +12,7 @@ export type SignUpCreds = SignInCreds & {
   role: [string]; // TODO:
 };
 
-type SignInResponse = {
+export type SignInResponse = {
   token: string;
   type: string;
   id: number;
@@ -21,7 +21,7 @@ type SignInResponse = {
   roles: string[];
 };
 
-type SignUpResponse = {
+export type SignUpResponse = {
   message: string;
 };
 

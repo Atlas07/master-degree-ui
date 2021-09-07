@@ -1,8 +1,11 @@
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
+import { useAuth } from '../contexts/authContext';
+
 const Dashboard = () => {
   const history = useHistory();
+  const { auth } = useAuth();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
