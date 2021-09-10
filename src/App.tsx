@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
+import { Pages } from './constants/pages';
 import { AuthProvider } from './contexts/authContext';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
@@ -11,9 +12,9 @@ const App = () => (
   <AuthProvider>
     <Router>
       <Switch>
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <Route path="/dashboard" component={Dashboard} />
+        <Route path={Pages.LOGIN} component={Login} />
+        <Route path={Pages.SIGNUP} component={Signup} />
+        <Route path={Pages.DASHBOARD} component={Dashboard} />
       </Switch>
     </Router>
   </AuthProvider>

@@ -1,13 +1,15 @@
-import * as R from 'ramda';
+import { Spinner } from 'react-bootstrap';
 import styled from 'styled-components';
 
-import { useAuth } from '../contexts/authContext';
+import useRequireAuth from '../hooks/useRequireAuth';
 import NavigationBar from '../organisms/NavigationBar';
 
 const Dashboard = () => {
-  const { auth, clearAuthData } = useAuth();
+  const auth = useRequireAuth();
 
-  const role = R.head(auth?.roles as string[]);
+  if (auth === null) {
+    <Spinner animation="border" />;
+  }
 
   return (
     <Wrapper>

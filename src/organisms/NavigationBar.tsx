@@ -3,15 +3,19 @@ import { FC } from 'react';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
+import { RoleType } from '../api/authorization';
 import { useAuth } from '../contexts/authContext';
 
 type Props = {};
+
+const getRole = (roles: RoleType[] | undefined): RoleType | undefined =>
+  R.isNil(roles) ? roles : R.head(roles);
 
 const NavigationBar: FC<Props> = () => {
   const history = useHistory();
   const { auth, clearAuthData } = useAuth();
 
-  const role = R.head(auth?.roles as string[]);
+  const role = getRole(auth?.roles);
 
   const handleLogout = () => {
     clearAuthData();
