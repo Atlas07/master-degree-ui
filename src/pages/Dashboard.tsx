@@ -1,36 +1,24 @@
-import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import * as R from 'ramda';
+import styled from 'styled-components';
 
 import { useAuth } from '../contexts/authContext';
+import NavigationBar from '../organisms/NavigationBar';
 
 const Dashboard = () => {
-  const history = useHistory();
-  const { auth } = useAuth();
+  const { auth, clearAuthData } = useAuth();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    history.push('/login');
-  };
+  const role = R.head(auth?.roles as string[]);
 
   return (
-    <Navbar bg="dark" variant="dark">
-      <Container>
-        <Navbar.Brand href="#home">Navbar</Navbar.Brand>
-        <Nav className="me-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#features">Features</Nav.Link>
-          <Nav.Link href="#pricing">Pricing</Nav.Link>
-        </Nav>
-
-        <Nav>
-          <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-            <NavDropdown.Item>Profile</NavDropdown.Item>
-            <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-          </NavDropdown>
-        </Nav>
-      </Container>
-    </Navbar>
+    <Wrapper>
+      <NavigationBar />
+    </Wrapper>
   );
 };
 
 export default Dashboard;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;

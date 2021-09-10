@@ -4,7 +4,7 @@ import { Alert, Button, Form } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { signUp } from '../api/authorization';
+import { Roles, RoleType, signUp } from '../api/authorization';
 import { ValidationErrorResponse, Violation } from '../api/guestApi';
 
 type ChangeFormEvent = FormEvent<
@@ -19,10 +19,10 @@ const formatViolationsErr = R.reduce<Violation, string>(
 
 const Signup = () => {
   const history = useHistory();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('ROLE_USER_ADMIN');
+  const [username, setUsername] = useState('CATALOG_ADMIN_NEW');
+  const [password, setPassword] = useState('CATALOG_ADMIN_NEW');
+  const [email, setEmail] = useState('CATALOG_ADMIN_NEW@gmail.com');
+  const [role, setRole] = useState<RoleType>(Roles.ROLE_CATALOG_ADMIN);
   const [isValidated, setIsValidated] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -98,13 +98,17 @@ const Signup = () => {
           <Form.Select
             aria-label="Default select example"
             value={role}
-            onChange={(e: ChangeFormEvent) => setRole(e.currentTarget.value)}
+            onChange={(e: ChangeFormEvent) =>
+              setRole(e.currentTarget.value as RoleType)
+            }
           >
-            <option value="ROLE_USER_ADMIN">User admin</option>
-            <option value="ROLE_ORDER_ADMIN">Order admin</option>
-            <option value="ROLE_PLAIN_USER">Plain user</option>
-            <option value="ROLE_CATALOG_ADMIN">Catalog user</option>
-            <option value="ROLE_MAINTENANCE_ADMIN">Maintenance user</option>
+            <option value={Roles.ROLE_USER_ADMIN}>User admin</option>
+            <option value={Roles.ROLE_ORDER_ADMIN}>Order admin</option>
+            <option value={Roles.ROLE_PLAIN_USER}>Plain user</option>
+            <option value={Roles.ROLE_CATALOG_ADMIN}>Catalog user</option>
+            <option value={Roles.ROLE_MAINTENANCE_ADMIN}>
+              Maintenance user
+            </option>
           </Form.Select>
         </Form.Group>
 

@@ -20,7 +20,21 @@ export const AuthProvider = ({
   const [auth, setAuth] = useState<SignInResponse | null>(
     getInitialAuthState(),
   );
-  const value = useMemo(() => ({ auth, setAuth }), [auth]);
+
+  const setAuthData = (authData: SignInResponse) => {
+    localStorage.setItem('user', JSON.stringify(authData));
+    setAuth(authData);
+  };
+
+  const clearAuthData = () => {
+    localStorage.removeItem('user');
+    setAuth(null);
+  };
+
+  const value = useMemo(
+    () => ({ auth, setAuth, setAuthData, clearAuthData }),
+    [auth],
+  );
 
   useEffect(() => {
     localStorage.setItem('user', JSON.stringify(auth));
@@ -42,4 +56,6 @@ function getInitialAuthState() {
 type AuthContextType = {
   auth: SignInResponse | null;
   setAuth: Dispatch<SignInResponse | null>;
+  setAuthData: (authData: SignInResponse) => void;
+  clearAuthData: () => void;
 };

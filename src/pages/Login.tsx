@@ -5,14 +5,14 @@ import styled from 'styled-components';
 
 import { signIn } from '../api/authorization';
 import { ErrorResponse } from '../api/guestApi';
-import useAuth from '../contexts/authContext';
+import { useAuth } from '../contexts/authContext';
 
 const Login = () => {
   const history = useHistory();
   // @ts-ignore
-  const { setAuth } = useAuth();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const { setAuthData } = useAuth();
+  const [username, setUsername] = useState('CATALOG_ADMIN_NEW');
+  const [password, setPassword] = useState('CATALOG_ADMIN_NEW');
   const [isValidated, setIsValidated] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,8 +28,7 @@ const Login = () => {
     setIsValidated(true);
     signIn({ username, password })
       .then(res => {
-        localStorage.setItem('user', JSON.stringify(res));
-        setAuth(res);
+        setAuthData(res);
         history.push('/dashboard');
       })
       .catch((err: ErrorResponse) => setError(err.message));
