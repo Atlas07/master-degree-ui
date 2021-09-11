@@ -1,7 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Spinner } from 'react-bootstrap';
+
+import {
+  fetchManufacters,
+  ManufacterType,
+} from '../../services/api/manufacter';
 
 const Manufacter = () => {
-  console.log('manufacter');
+  const [manufactures, setManufactures] = useState<ManufacterType[] | null>(
+    null,
+  );
+
+  useEffect(() => {
+    fetchManufacters().then(setManufactures);
+  }, []);
+
+  if (!manufactures) {
+    return <Spinner animation="border" />;
+  }
 
   return <div>Manufacter</div>;
 };

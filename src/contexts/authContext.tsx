@@ -8,7 +8,8 @@ import {
   useState,
 } from 'react';
 
-import { SignInResponse } from '../api/authorization';
+import { SignInResponse } from '../services/api/authorization';
+import userService from '../services/userService';
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
@@ -17,28 +18,26 @@ export const AuthProvider = ({
 }: {
   children: ReactNode;
 }): JSX.Element => {
-  const [auth, setAuth] = useState<SignInResponse | null>(
-    getInitialAuthState(),
-  );
+  const [auth, setAuth] = useState<SignInResponse | null>(userService.get());
 
   const setAuthData = (authData: SignInResponse) => {
-    localStorage.setItem('user', JSON.stringify(authData));
+    userService.set(authData);
     setAuth(authData);
   };
 
   const clearAuthData = () => {
-    localStorage.removeItem('user');
+    userService.remove();
     setAuth(null);
   };
+
+  useEffect(() => {
+    userService.set(auth);
+  }, [auth]);
 
   const value = useMemo(
     () => ({ auth, setAuth, setAuthData, clearAuthData }),
     [auth],
   );
-
-  useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(auth));
-  }, [auth]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
@@ -46,12 +45,6 @@ export const AuthProvider = ({
 export const useAuth = () => useContext(AuthContext);
 
 export default AuthContext;
-
-function getInitialAuthState() {
-  const authState = localStorage.getItem('user');
-
-  return authState ? (JSON.parse(authState) as SignInResponse) : null;
-}
 
 type AuthContextType = {
   auth: SignInResponse | null;

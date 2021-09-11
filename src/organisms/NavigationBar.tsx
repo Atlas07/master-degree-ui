@@ -3,9 +3,9 @@ import { FC } from 'react';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
-import { RoleType } from '../api/authorization';
 import { Pages } from '../constants/pages';
 import { useAuth } from '../contexts/authContext';
+import { RoleType } from '../services/api/authorization';
 
 type Props = {};
 
@@ -20,7 +20,7 @@ const NavigationBar: FC<Props> = () => {
 
   const handleLogout = () => {
     clearAuthData();
-    history.push('/login');
+    history.push(Pages.LOGIN);
   };
 
   return (

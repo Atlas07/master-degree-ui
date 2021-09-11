@@ -19,6 +19,7 @@ export type SignUpCreds = SignInCreds & {
 };
 
 export type SignInResponse = {
+  // TODO: rename
   token: string;
   type: string;
   id: number;

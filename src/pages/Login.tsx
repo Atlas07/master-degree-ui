@@ -1,15 +1,15 @@
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { signIn } from '../api/authorization';
-import { ErrorResponse } from '../api/guestApi';
 import { useAuth } from '../contexts/authContext';
+import { signIn } from '../services/api/authorization';
+import { ErrorResponse } from '../services/api/guestApi';
 
 const Login = () => {
   const history = useHistory();
-  // @ts-ignore
+  const location = useLocation();
   const { setAuthData } = useAuth();
   const [username, setUsername] = useState('CATALOG_ADMIN_NEW');
   const [password, setPassword] = useState('CATALOG_ADMIN_NEW');

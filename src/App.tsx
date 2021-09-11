@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import { Router } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
 
 import { Pages } from './constants/pages';
 import { AuthProvider } from './contexts/authContext';
@@ -8,9 +10,11 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
+export const history = createBrowserHistory();
+
 const App = () => (
   <AuthProvider>
-    <Router>
+    <Router history={history}>
       <Switch>
         <Route path={Pages.LOGIN} component={Login} />
         <Route path={Pages.SIGNUP} component={Signup} />

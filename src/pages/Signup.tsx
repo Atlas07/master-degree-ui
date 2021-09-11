@@ -4,8 +4,8 @@ import { Alert, Button, Form } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { Roles, RoleType, signUp } from '../api/authorization';
-import { ValidationErrorResponse, Violation } from '../api/guestApi';
+import { Roles, RoleType, signUp } from '../services/api/authorization';
+import { ValidationErrorResponse, Violation } from '../services/api/guestApi';
 
 type ChangeFormEvent = FormEvent<
   HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
