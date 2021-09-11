@@ -9,8 +9,6 @@ function useRequireAuth(redirectUrl = Pages.LOGIN) {
   const { auth } = useAuth();
 
   useEffect(() => {
-    console.log('useRequire hook');
-
     if (!!auth?.token === false) {
       history.push(redirectUrl);
     }

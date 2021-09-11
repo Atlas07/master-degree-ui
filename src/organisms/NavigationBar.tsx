@@ -4,6 +4,7 @@ import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
 import { RoleType } from '../api/authorization';
+import { Pages } from '../constants/pages';
 import { useAuth } from '../contexts/authContext';
 
 type Props = {};
@@ -41,7 +42,11 @@ const NavigationBar: FC<Props> = () => {
 
         <Nav className="me-auto">
           <NavDropdown title="Catalog" id="collasible-nav-dropdown">
-            <NavDropdown.Item>Manufacter</NavDropdown.Item>
+            <NavDropdown.Item
+              onClick={() => history.push(`${Pages.DASHBOARD}/manufacter`)}
+            >
+              Manufacter
+            </NavDropdown.Item>
             <NavDropdown.Item>Mining farm</NavDropdown.Item>
             <NavDropdown.Item>Cooling rack</NavDropdown.Item>
             <NavDropdown.Item>Fan</NavDropdown.Item>

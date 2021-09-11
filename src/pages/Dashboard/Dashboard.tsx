@@ -1,8 +1,11 @@
 import { Spinner } from 'react-bootstrap';
+import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
-import useRequireAuth from '../hooks/useRequireAuth';
-import NavigationBar from '../organisms/NavigationBar';
+import { Pages } from '../../constants/pages';
+import useRequireAuth from '../../hooks/useRequireAuth';
+import NavigationBar from '../../organisms/NavigationBar';
+import Manufacter from './Manufacter';
 
 const Dashboard = () => {
   const auth = useRequireAuth();
@@ -14,6 +17,10 @@ const Dashboard = () => {
   return (
     <Wrapper>
       <NavigationBar />
+
+      <Switch>
+        <Route path={`${Pages.DASHBOARD}/manufacter`} component={Manufacter} />
+      </Switch>
     </Wrapper>
   );
 };
