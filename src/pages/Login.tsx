@@ -31,7 +31,9 @@ const Login = () => {
         setAuthData(res);
         history.push('/dashboard');
       })
-      .catch((err: ErrorResponse) => setError(err.message));
+      .catch((err: ErrorResponse) =>
+        setError(err?.message ?? 'Unexpected error.'),
+      );
   };
 
   const handleInputChange =

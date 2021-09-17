@@ -39,7 +39,11 @@ const Signup = () => {
     signUp({ username, password, email, role: [role] })
       .then(() => history.push('/login'))
       .catch((err: ValidationErrorResponse) =>
-        setError(formatViolationsErr(err.violations)),
+        setError(
+          err?.violations
+            ? formatViolationsErr(err.violations)
+            : 'Unexpected error.',
+        ),
       );
   };
 
