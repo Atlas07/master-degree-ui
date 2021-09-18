@@ -16,6 +16,7 @@ import {
   fetchManufacters,
   ManufacterType,
 } from '../../../services/api/manufacter';
+import DeleteManufacterModal from './DeleteManufacterModal';
 import ManufacterModal from './ManufacterModal';
 
 type ManufacterCellType = Column<ManufacterType>;
@@ -24,7 +25,8 @@ type ActionCellType = CellProps<ManufacterType, ManufacterType>;
 const Manufacter = () => {
   const [manufactures, setManufactures] = useState<ManufacterType[]>([]);
   const [error, setError] = useState<ErrorResponse | null>(null);
-  const [isCreateModalOpened, setIsCreateModalOpened] = useState(false);
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
   const [selectedManufacter, setSelectedManufacter] =
     useState<ManufacterType | null>(null);
 
@@ -62,12 +64,20 @@ const Manufacter = () => {
               variant="outline-warning"
               onClick={() => {
                 setSelectedManufacter(data.value);
-                setIsCreateModalOpened(true);
+                setIsModalOpened(true);
               }}
             >
               Edit
             </Button>
-            <Button variant="outline-danger">Delete</Button>
+            <Button
+              variant="outline-danger"
+              onClick={() => {
+                setSelectedManufacter(data.value);
+                setIsDeleteModalOpened(true);
+              }}
+            >
+              Delete
+            </Button>
           </TableControls>
         ),
       },
@@ -105,10 +115,7 @@ const Manufacter = () => {
           <Button variant="outline-secondary">Clear</Button>
           <Button variant="outline-secondary">Search</Button>
         </InputGroupStyled>
-        <ButtonStyled
-          variant="primary"
-          onClick={() => setIsCreateModalOpened(true)}
-        >
+        <ButtonStyled variant="primary" onClick={() => setIsModalOpened(true)}>
           Add new
         </ButtonStyled>
       </Controls>
@@ -138,13 +145,22 @@ const Manufacter = () => {
       </TableStyled>
 
       <ManufacterModal
-        isOpen={isCreateModalOpened}
+        isOpen={isModalOpened}
         onClose={() => {
-          setIsCreateModalOpened(false);
+          setIsModalOpened(false);
           setSelectedManufacter(null);
         }}
         onSubmit={refetchManufactures}
         initialValues={selectedManufacter}
+      />
+      <DeleteManufacterModal
+        isOpen={isDeleteModalOpened}
+        onClose={() => {
+          setIsDeleteModalOpened(false);
+          setSelectedManufacter(null);
+        }}
+        onSubmit={refetchManufactures}
+        values={selectedManufacter}
       />
     </Wrapper>
   );

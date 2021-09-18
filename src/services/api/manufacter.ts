@@ -18,6 +18,9 @@ export const updateManufacter = ({
 }: UpdateManufacterType): Promise<ManufacterType> =>
   authApi.put(`/manufacturers/${id}/`, { name }).then(R.prop('data'));
 
+export const deleteManufacter = (id: ManufacterType['id']): Promise<void> =>
+  authApi.delete(`/manufacturers/${id}`);
+
 export type ManufacterType = {
   id: number;
   name: string;
