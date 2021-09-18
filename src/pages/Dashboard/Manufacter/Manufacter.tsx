@@ -8,7 +8,7 @@ import {
   Spinner,
   Table,
 } from 'react-bootstrap';
-import { Column, useTable } from 'react-table';
+import { CellProps, Column, useTable } from 'react-table';
 import styled from 'styled-components';
 
 import { ErrorResponse } from '../../../services/api/guestApi';
@@ -19,11 +19,14 @@ import {
 import ManufacterModal from './ManufacterModal';
 
 type ManufacterCellType = Column<ManufacterType>;
+type ActionCellType = CellProps<ManufacterType, ManufacterType>;
 
 const Manufacter = () => {
   const [manufactures, setManufactures] = useState<ManufacterType[]>([]);
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [isCreateModalOpened, setIsCreateModalOpened] = useState(false);
+  const [selectedManufacter, setSelectedManufacter] =
+    useState<ManufacterType | null>(null);
 
   const columns: ManufacterCellType[] = useMemo(
     () => [
@@ -48,6 +51,25 @@ const Manufacter = () => {
         Header: 'modified when',
         accessor: 'modifiedWhen',
         Cell: ({ value }) => (R.isEmpty(value) ? '-' : value),
+      },
+      {
+        id: 'controls',
+        Header: '',
+        accessor: manufacter => manufacter,
+        Cell: (data: ActionCellType) => (
+          <TableControls>
+            <Button
+              variant="outline-warning"
+              onClick={() => {
+                setSelectedManufacter(data.value);
+                setIsCreateModalOpened(true);
+              }}
+            >
+              Edit
+            </Button>
+            <Button variant="outline-danger">Delete</Button>
+          </TableControls>
+        ),
       },
     ],
     [],
@@ -117,8 +139,12 @@ const Manufacter = () => {
 
       <ManufacterModal
         isOpen={isCreateModalOpened}
-        onClose={() => setIsCreateModalOpened(false)}
+        onClose={() => {
+          setIsCreateModalOpened(false);
+          setSelectedManufacter(null);
+        }}
         onSubmit={refetchManufactures}
+        initialValues={selectedManufacter}
       />
     </Wrapper>
   );
@@ -154,4 +180,9 @@ const Controls = styled.div`
 const InputGroupStyled = styled(InputGroup)`
   width: 70%;
   /* margin-right: 50px; */
+`;
+
+const TableControls = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;

@@ -12,6 +12,12 @@ export const createManufacter = (
 ): Promise<ManufacterType> =>
   authApi.post('/manufacturers/', { name }).then(R.prop('data'));
 
+export const updateManufacter = ({
+  id,
+  name,
+}: UpdateManufacterType): Promise<ManufacterType> =>
+  authApi.put(`/manufacturers/${id}/`, { name }).then(R.prop('data'));
+
 export type ManufacterType = {
   id: number;
   name: string;
@@ -20,3 +26,5 @@ export type ManufacterType = {
   modifiedBy: string;
   modifiedWhen: string;
 };
+
+export type UpdateManufacterType = Pick<ManufacterType, 'id' | 'name'>;

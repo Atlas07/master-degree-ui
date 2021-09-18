@@ -1,18 +1,28 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent, useEffect, useState } from 'react';
 import { Alert, Form } from 'react-bootstrap';
 
 import CenteredModal from '../../../molecules/CenteredModal';
 import { ErrorResponse } from '../../../services/api/guestApi';
-import { createManufacter } from '../../../services/api/manufacter';
+import {
+  createManufacter,
+  ManufacterType,
+  updateManufacter,
+} from '../../../services/api/manufacter';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => Promise<void>;
+  initialValues: ManufacterType | null;
 };
 
-const ManufacterModal: FC<Props> = ({ isOpen, onClose, onSubmit }) => {
-  const [name, setName] = useState('');
+const ManufacterModal: FC<Props> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialValues,
+}) => {
+  const [name, setName] = useState(initialValues?.name ?? '');
   const [error, setError] = useState<string | null>(null);
   const [isValidated, setIsValidated] = useState(false);
 
@@ -34,7 +44,11 @@ const ManufacterModal: FC<Props> = ({ isOpen, onClose, onSubmit }) => {
 
     setIsValidated(true);
 
-    createManufacter(name)
+    const request = initialValues
+      ? updateManufacter({ id: initialValues?.id, name })
+      : createManufacter(name);
+
+    request
       .then(onSubmit)
       .then(onClose)
       .catch((err: ErrorResponse) =>
@@ -42,12 +56,17 @@ const ManufacterModal: FC<Props> = ({ isOpen, onClose, onSubmit }) => {
       );
   };
 
+  useEffect(() => {
+    setName(initialValues?.name ?? '');
+  }, [initialValues]);
+
   return (
     <CenteredModal
-      title="Add manufacter"
+      title={`${initialValues?.name ? 'Edit' : 'Add'} manufacter`}
       isOpen={isOpen}
       onSecondaryButtonClick={onClose}
       onPrimaryButtonClick={handleSubmit}
+      primaryButtonText={initialValues?.name ? 'Edit' : 'Create'}
       isPrimaryButtonDisabled={name.length === 0}
       content={
         <>
