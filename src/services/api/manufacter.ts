@@ -1,11 +1,22 @@
 import * as R from 'ramda';
 
+import { getQueryParams } from '../../utils';
 import authApi from './authApi';
 
-export const fetchManufacters = (): Promise<ManufacterType[]> =>
-  authApi
-    .get('/manufacturers?start=0&sortBy=id&sortType=asc&count=100')
-    .then(R.prop('data'));
+const DEFAULT_PARAMS = {
+  start: 0,
+  sortBy: 'id',
+  sortType: 'asc',
+  count: 100,
+};
+
+export const fetchManufacters = (
+  params?: RequestWithQueryType,
+): Promise<ManufacterType[]> => {
+  const queryParams = getQueryParams({ ...DEFAULT_PARAMS, ...params });
+
+  return authApi.get(`/manufacturers?${queryParams}`).then(R.prop('data'));
+};
 
 export const createManufacter = (
   name: ManufacterType['name'],
@@ -21,13 +32,20 @@ export const updateManufacter = ({
 export const deleteManufacter = (id: ManufacterType['id']): Promise<void> =>
   authApi.delete(`/manufacturers/${id}`);
 
+export type RequestWithQueryType = {
+  start: number;
+  sortBy: string;
+  sortType: 'asc';
+  count: number;
+};
+
 export type ManufacterType = {
   id: number;
   name: string;
   createdBy: string;
-  createdWhen: string;
+  createdWhen: Date;
   modifiedBy: string;
-  modifiedWhen: string;
+  modifiedWhen: Date;
 };
 
 export type UpdateManufacterType = Pick<ManufacterType, 'id' | 'name'>;
