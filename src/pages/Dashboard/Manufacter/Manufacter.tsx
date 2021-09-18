@@ -11,17 +11,19 @@ import {
 import { Column, useTable } from 'react-table';
 import styled from 'styled-components';
 
-import { ErrorResponse } from '../../services/api/guestApi';
+import { ErrorResponse } from '../../../services/api/guestApi';
 import {
   fetchManufacters,
   ManufacterType,
-} from '../../services/api/manufacter';
+} from '../../../services/api/manufacter';
+import ManufacterModal from './ManufacterModal';
 
 type ManufacterCellType = Column<ManufacterType>;
 
 const Manufacter = () => {
   const [manufactures, setManufactures] = useState<ManufacterType[]>([]);
   const [error, setError] = useState<ErrorResponse | null>(null);
+  const [isCreateModalOpened, setIsCreateModalOpened] = useState(false);
 
   const columns: ManufacterCellType[] = useMemo(
     () => [
@@ -57,8 +59,11 @@ const Manufacter = () => {
       data: manufactures,
     });
 
-  useEffect(() => {
+  const refetchManufactures = () =>
     fetchManufacters().then(setManufactures).catch(setError);
+
+  useEffect(() => {
+    refetchManufactures();
   }, []);
 
   if (error) {
@@ -78,7 +83,12 @@ const Manufacter = () => {
           <Button variant="outline-secondary">Clear</Button>
           <Button variant="outline-secondary">Search</Button>
         </InputGroupStyled>
-        <ButtonStyled variant="primary">Add new</ButtonStyled>
+        <ButtonStyled
+          variant="primary"
+          onClick={() => setIsCreateModalOpened(true)}
+        >
+          Add new
+        </ButtonStyled>
       </Controls>
 
       <TableStyled striped bordered hover {...getTableProps()}>
@@ -104,6 +114,12 @@ const Manufacter = () => {
           })}
         </tbody>
       </TableStyled>
+
+      <ManufacterModal
+        isOpen={isCreateModalOpened}
+        onClose={() => setIsCreateModalOpened(false)}
+        onSubmit={refetchManufactures}
+      />
     </Wrapper>
   );
 };
