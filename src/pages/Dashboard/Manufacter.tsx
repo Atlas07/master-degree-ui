@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import { useEffect, useMemo, useState } from 'react';
 import {
   Alert,
@@ -39,10 +40,12 @@ const Manufacter = () => {
       {
         Header: 'Modified by',
         accessor: 'modifiedBy',
+        Cell: ({ value }) => (R.isEmpty(value) ? '-' : value),
       },
       {
         Header: 'modified when',
         accessor: 'modifiedWhen',
+        Cell: ({ value }) => (R.isEmpty(value) ? '-' : value),
       },
     ],
     [],
