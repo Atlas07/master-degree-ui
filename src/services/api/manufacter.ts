@@ -32,6 +32,11 @@ export const updateManufacter = ({
 export const deleteManufacter = (id: ManufacterType['id']): Promise<void> =>
   authApi.delete(`/manufacturers/${id}`);
 
+export const findManufactures = (
+  name: ManufacterType['name'],
+): Promise<ManufacterType[]> =>
+  authApi.get(`/manufacturers/search/?name=${name}`).then(R.prop('data'));
+
 export type RequestWithQueryType = {
   start: number;
   sortBy: string;

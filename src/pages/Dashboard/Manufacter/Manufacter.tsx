@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   Button,
@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import { ErrorResponse } from '../../../services/api/guestApi';
 import {
   fetchManufacters,
+  findManufactures,
   ManufacterType,
 } from '../../../services/api/manufacter';
 import DeleteManufacterModal from './DeleteManufacterModal';
@@ -23,7 +24,10 @@ type ManufacterCellType = Column<ManufacterType>;
 type ActionCellType = CellProps<ManufacterType, ManufacterType>;
 
 const Manufacter = () => {
-  const [manufactures, setManufactures] = useState<ManufacterType[]>([]);
+  const [manufactures, setManufactures] = useState<ManufacterType[] | null>(
+    null,
+  );
+  const [search, setSearch] = useState('');
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
@@ -88,61 +92,90 @@ const Manufacter = () => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
-      data: manufactures,
+      data: R.isNil(manufactures) ? [] : manufactures,
     });
 
-  const refetchManufactures = () =>
-    fetchManufacters().then(setManufactures).catch(setError);
+  const handleSearchChange = (
+    e: FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSearch(e.currentTarget.value);
+  };
+
+  const handleSearchSubmit = () => {
+    setError(null);
+    findManufactures(search).then(setManufactures).catch(setError);
+  };
+
+  const refetchManufactures = () => {
+    setError(null);
+
+    return fetchManufacters().then(setManufactures).catch(setError);
+  };
 
   useEffect(() => {
     refetchManufactures();
   }, []);
-
-  if (error) {
-    return <Alert variant="danger">{error.message}</Alert>;
-  }
-
-  if (!manufactures.length) {
-    return <Spinner animation="border" />;
-  }
 
   return (
     <Wrapper>
       <Header>Manufacter</Header>
       <Controls>
         <InputGroupStyled>
-          <FormControl placeholder="Search for manufactures" aria-label="" />
-          <Button variant="outline-secondary">Clear</Button>
-          <Button variant="outline-secondary">Search</Button>
+          <FormControl
+            placeholder="Search for manufactures"
+            aria-label=""
+            value={search}
+            onChange={handleSearchChange}
+          />
+          <Button variant="outline-secondary" onClick={() => setSearch('')}>
+            Clear
+          </Button>
+          <Button variant="outline-secondary" onClick={handleSearchSubmit}>
+            Search
+          </Button>
         </InputGroupStyled>
         <ButtonStyled variant="primary" onClick={() => setIsModalOpened(true)}>
           Add new
         </ButtonStyled>
       </Controls>
 
-      <TableStyled striped bordered hover {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+      {error && <Alert variant="danger">{error.message}</Alert>}
+
+      {manufactures === null && <Spinner animation="border" />}
+
+      {manufactures?.length === 0 && (
+        <Alert variant="primary">There is no manufactures.</Alert>
+      )}
+
+      {!error && manufactures?.length !== 0 && (
+        <TableStyled striped bordered hover {...getTableProps()}>
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  <th {...column.getHeaderProps()}>
+                    {column.render('Header')}
+                  </th>
                 ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </TableStyled>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </TableStyled>
+      )}
 
       <ManufacterModal
         isOpen={isModalOpened}
