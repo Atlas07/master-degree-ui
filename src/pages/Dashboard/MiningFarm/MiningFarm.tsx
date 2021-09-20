@@ -6,11 +6,11 @@ import {
   FormControl,
   InputGroup,
   Spinner,
-  Table,
 } from 'react-bootstrap';
-import { CellProps, Column, useTable } from 'react-table';
+import { Column, useTable } from 'react-table';
 import styled from 'styled-components';
 
+import GeneralTable from '../../../organisms/GeneralTable';
 import { ErrorResponse } from '../../../services/api/guestApi';
 import {
   fetchMiningFarms,
@@ -19,7 +19,6 @@ import {
 import { getOptionalTableValue } from '../../../utils';
 
 type MiningFarmCellType = Column<MiningFarmType>;
-type ActionCellType = CellProps<MiningFarmType, MiningFarmType>;
 
 const MiningFarm = () => {
   const [miningFarms, setMiningFarms] = useState<MiningFarmType[] | null>(null);
@@ -27,7 +26,7 @@ const MiningFarm = () => {
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
-  const [selectedManufacter, setSelectedManufacter] =
+  const [selectedMiningFarm, setSelectedMiningFarm] =
     useState<MiningFarmType | null>(null);
 
   const columns: MiningFarmCellType[] = useMemo(
@@ -229,51 +228,14 @@ const MiningFarm = () => {
       )}
 
       {!error && miningFarms?.length !== 0 && (
-        <TableStyled striped bordered hover {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th {...column.getHeaderProps()}>
-                    {column.render('Header')}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </TableStyled>
+        <GeneralTable<MiningFarmType>
+          getTableProps={getTableProps}
+          getTableBodyProps={getTableBodyProps}
+          headerGroups={headerGroups}
+          rows={rows}
+          prepareRow={prepareRow}
+        />
       )}
-
-      {/* <ManufacterModal
-        isOpen={isModalOpened}
-        onClose={() => {
-          setIsModalOpened(false);
-          setSelectedManufacter(null);
-        }}
-        onSubmit={refetchManufactures}
-        initialValues={selectedManufacter}
-      />
-      <DeleteManufacterModal
-        isOpen={isDeleteModalOpened}
-        onClose={() => {
-          setIsDeleteModalOpened(false);
-          setSelectedManufacter(null);
-        }}
-        onSubmit={refetchManufactures}
-        values={selectedManufacter}
-      /> */}
     </Wrapper>
   );
 };
@@ -289,8 +251,6 @@ const Wrapper = styled.div`
 const Header = styled.h1`
   margin-bottom: 45px;
 `;
-
-const TableStyled = styled(Table)``;
 
 const ButtonStyled = styled(Button)`
   width: 150px;
@@ -308,9 +268,4 @@ const Controls = styled.div`
 const InputGroupStyled = styled(InputGroup)`
   width: 70%;
   /* margin-right: 50px; */
-`;
-
-const TableControls = styled.div`
-  display: flex;
-  justify-content: space-between;
 `;

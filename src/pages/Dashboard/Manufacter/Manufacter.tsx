@@ -6,11 +6,11 @@ import {
   FormControl,
   InputGroup,
   Spinner,
-  Table,
 } from 'react-bootstrap';
 import { CellProps, Column, useTable } from 'react-table';
 import styled from 'styled-components';
 
+import GeneralTable from '../../../organisms/GeneralTable';
 import { ErrorResponse } from '../../../services/api/guestApi';
 import {
   fetchManufacters,
@@ -150,51 +150,36 @@ const Manufacter = () => {
       )}
 
       {!error && manufactures?.length !== 0 && (
-        <TableStyled striped bordered hover {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th {...column.getHeaderProps()}>
-                    {column.render('Header')}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </TableStyled>
+        <GeneralTable<ManufacterType>
+          getTableProps={getTableProps}
+          getTableBodyProps={getTableBodyProps}
+          headerGroups={headerGroups}
+          rows={rows}
+          prepareRow={prepareRow}
+          modals={
+            <>
+              <ManufacterModal
+                isOpen={isModalOpened}
+                onClose={() => {
+                  setIsModalOpened(false);
+                  setSelectedManufacter(null);
+                }}
+                onSubmit={refetchManufactures}
+                initialValues={selectedManufacter}
+              />
+              <DeleteManufacterModal
+                isOpen={isDeleteModalOpened}
+                onClose={() => {
+                  setIsDeleteModalOpened(false);
+                  setSelectedManufacter(null);
+                }}
+                onSubmit={refetchManufactures}
+                values={selectedManufacter}
+              />
+            </>
+          }
+        />
       )}
-
-      <ManufacterModal
-        isOpen={isModalOpened}
-        onClose={() => {
-          setIsModalOpened(false);
-          setSelectedManufacter(null);
-        }}
-        onSubmit={refetchManufactures}
-        initialValues={selectedManufacter}
-      />
-      <DeleteManufacterModal
-        isOpen={isDeleteModalOpened}
-        onClose={() => {
-          setIsDeleteModalOpened(false);
-          setSelectedManufacter(null);
-        }}
-        onSubmit={refetchManufactures}
-        values={selectedManufacter}
-      />
     </Wrapper>
   );
 };
@@ -210,8 +195,6 @@ const Wrapper = styled.div`
 const Header = styled.h1`
   margin-bottom: 45px;
 `;
-
-const TableStyled = styled(Table)``;
 
 const ButtonStyled = styled(Button)`
   width: 150px;
