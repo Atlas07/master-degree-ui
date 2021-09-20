@@ -12,6 +12,9 @@ export const fetchMiningFarms = (
   return authApi.get(`/miningFarms?${queryParams}`).then(R.prop('data'));
 };
 
+export const deleteMiningFarm = (id: MiningFarmType['id']): Promise<void> =>
+  authApi.delete(`/miningFarms/${id}`);
+
 // TODO: fix optional fields
 export type MiningFarmType = {
   id: number;

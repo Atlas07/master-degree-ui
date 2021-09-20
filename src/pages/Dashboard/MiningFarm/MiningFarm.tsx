@@ -7,7 +7,7 @@ import {
   InputGroup,
   Spinner,
 } from 'react-bootstrap';
-import { Column, useTable } from 'react-table';
+import { CellProps, Column, useTable } from 'react-table';
 import styled from 'styled-components';
 
 import GeneralTable from '../../../organisms/GeneralTable';
@@ -17,8 +17,10 @@ import {
   MiningFarmType,
 } from '../../../services/api/miningFarm';
 import { getOptionalTableValue } from '../../../utils';
+import DeleteMiningFarmModal from './DeleteMiningFarmModal';
 
 type MiningFarmCellType = Column<MiningFarmType>;
+type ActionCellType = CellProps<MiningFarmType, MiningFarmType>;
 
 const MiningFarm = () => {
   const [miningFarms, setMiningFarms] = useState<MiningFarmType[] | null>(null);
@@ -136,34 +138,33 @@ const MiningFarm = () => {
         accessor: 'modifiedWhen',
         Cell: getOptionalTableValue,
       },
-
-      // {
-      //   id: 'controls',
-      //   Header: '',
-      //   accessor: manufacter => manufacter,
-      //   Cell: (data: ActionCellType) => (
-      //     <TableControls>
-      //       <Button
-      //         variant="outline-warning"
-      //         onClick={() => {
-      //           setSelectedManufacter(data.value);
-      //           setIsModalOpened(true);
-      //         }}
-      //       >
-      //         Edit
-      //       </Button>
-      //       <Button
-      //         variant="outline-danger"
-      //         onClick={() => {
-      //           setSelectedManufacter(data.value);
-      //           setIsDeleteModalOpened(true);
-      //         }}
-      //       >
-      //         Delete
-      //       </Button>
-      //     </TableControls>
-      //   ),
-      // },
+      {
+        id: 'controls',
+        Header: '',
+        accessor: miningFarm => miningFarm,
+        Cell: (data: ActionCellType) => (
+          <TableControls>
+            <Button
+              variant="outline-warning"
+              onClick={() => {
+                setSelectedMiningFarm(data.value);
+                setIsModalOpened(true);
+              }}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="outline-danger"
+              onClick={() => {
+                setSelectedMiningFarm(data.value);
+                setIsDeleteModalOpened(true);
+              }}
+            >
+              Delete
+            </Button>
+          </TableControls>
+        ),
+      },
     ],
     [],
   );
@@ -234,6 +235,17 @@ const MiningFarm = () => {
           headerGroups={headerGroups}
           rows={rows}
           prepareRow={prepareRow}
+          modals={
+            <DeleteMiningFarmModal
+              isOpen={isDeleteModalOpened}
+              onClose={() => {
+                setIsDeleteModalOpened(false);
+                setSelectedMiningFarm(null);
+              }}
+              onSubmit={refetchMiningFarms}
+              values={selectedMiningFarm}
+            />
+          }
         />
       )}
     </Wrapper>
@@ -268,4 +280,9 @@ const Controls = styled.div`
 const InputGroupStyled = styled(InputGroup)`
   width: 70%;
   /* margin-right: 50px; */
+`;
+
+const TableControls = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
