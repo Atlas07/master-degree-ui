@@ -1,14 +1,7 @@
 import * as R from 'ramda';
 
-import { getQueryParams } from '../../utils';
+import { DEFAULT_PARAMS, getQueryParams } from '../../utils';
 import authApi from './authApi';
-
-const DEFAULT_PARAMS = {
-  start: 0,
-  sortBy: 'id',
-  sortType: 'asc',
-  count: 100,
-};
 
 export const fetchManufacters = (
   params?: RequestWithQueryType,

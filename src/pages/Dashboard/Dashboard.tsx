@@ -6,6 +6,7 @@ import { Pages } from '../../constants/pages';
 import useRequireAuth from '../../hooks/useRequireAuth';
 import NavigationBar from '../../organisms/NavigationBar';
 import Manufacter from './Manufacter';
+import MiningFarm from './MiningFarm';
 
 const Dashboard = () => {
   const auth = useRequireAuth();
@@ -20,6 +21,7 @@ const Dashboard = () => {
 
       <Switch>
         <Route path={`${Pages.DASHBOARD}/manufacter`} component={Manufacter} />
+        <Route path={`${Pages.DASHBOARD}/mining-farm`} component={MiningFarm} />
       </Switch>
     </Wrapper>
   );
