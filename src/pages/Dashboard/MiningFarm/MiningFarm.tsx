@@ -16,8 +16,9 @@ import {
   fetchMiningFarms,
   MiningFarmType,
 } from '../../../services/api/miningFarm';
-import { getOptionalTableValue } from '../../../utils';
+import { TABLE_COLUMNS } from './columns';
 import DeleteMiningFarmModal from './DeleteMiningFarmModal';
+import MiningFarmModal from './MiningFarmModal';
 
 type MiningFarmCellType = Column<MiningFarmType>;
 type ActionCellType = CellProps<MiningFarmType, MiningFarmType>;
@@ -33,111 +34,7 @@ const MiningFarm = () => {
 
   const columns: MiningFarmCellType[] = useMemo(
     () => [
-      {
-        Header: 'Model',
-        accessor: 'model',
-      },
-      {
-        Header: 'Also as knows as',
-        accessor: 'alsoAsKnownAs',
-        Cell: getOptionalTableValue,
-      },
-      {
-        Header: 'Release date',
-        accessor: 'releaseDate',
-        Cell: getOptionalTableValue,
-      },
-      {
-        Header: 'Size',
-        accessor: 'size',
-        Cell: getOptionalTableValue,
-      },
-      {
-        Header: 'Weight',
-        accessor: 'weight',
-        Cell: getOptionalTableValue,
-      },
-      // {
-      //   Header: 'Noise level',
-      //   accessor: 'noiseLevel',
-      //   Cell: getOptionalTableValue,
-      // },
-      // {
-      //   Header: 'Fans',
-      //   accessor: 'fans',
-      //   Cell: getOptionalTableValue,
-      // },
-      // {
-      //   Header: 'Chip count',
-      //   accessor: 'chipCount',
-      //   Cell: getOptionalTableValue,
-      // },
-      // {
-      //   Header: 'Rack format',
-      //   accessor: 'rackFormat',
-      //   Cell: getOptionalTableValue,
-      // },
-      // {
-      //   Header: 'Cooling',
-      //   accessor: 'cooling',
-      //   Cell: getOptionalTableValue,
-      // },
-      {
-        Header: 'Power',
-        accessor: 'power',
-        Cell: getOptionalTableValue,
-      },
-      // {
-      //   Header: 'Voltage',
-      //   accessor: 'voltage',
-      //   Cell: getOptionalTableValue,
-      // },
-      // {
-      //   Header: 'Interface name',
-      //   accessor: 'interfaceName',
-      //   Cell: getOptionalTableValue,
-      // },
-      // {
-      //   Header: 'Memory',
-      //   accessor: 'memory',
-      //   Cell: getOptionalTableValue,
-      // },
-      // {
-      //   Header: 'Temperature',
-      //   accessor: 'temperature',
-      //   Cell: getOptionalTableValue,
-      // },
-      // {
-      //   Header: 'Humidity',
-      //   accessor: 'humidity',
-      //   Cell: getOptionalTableValue,
-      // },
-      {
-        Header: 'Price usd',
-        accessor: 'priceUsd',
-        Cell: getOptionalTableValue,
-      },
-      // TODO:
-      // {
-      //   Header: 'Manufacter',
-      //   accessor:
-      //   Cell: getOptionalTableValue,
-      // },
-      {
-        Header: 'Created when',
-        accessor: 'createdWhen',
-        Cell: getOptionalTableValue,
-      },
-      {
-        Header: 'Created by',
-        accessor: 'createdBy',
-        Cell: getOptionalTableValue,
-      },
-      {
-        Header: 'Modified when',
-        accessor: 'modifiedWhen',
-        Cell: getOptionalTableValue,
-      },
+      ...(TABLE_COLUMNS as MiningFarmCellType[]),
       {
         id: 'controls',
         Header: '',
@@ -236,15 +133,26 @@ const MiningFarm = () => {
           rows={rows}
           prepareRow={prepareRow}
           modals={
-            <DeleteMiningFarmModal
-              isOpen={isDeleteModalOpened}
-              onClose={() => {
-                setIsDeleteModalOpened(false);
-                setSelectedMiningFarm(null);
-              }}
-              onSubmit={refetchMiningFarms}
-              values={selectedMiningFarm}
-            />
+            <>
+              <MiningFarmModal
+                isOpen={isModalOpened}
+                onClose={() => {
+                  setIsModalOpened(false);
+                  setSelectedMiningFarm(null);
+                }}
+                onSubmit={refetchMiningFarms}
+                initialValues={selectedMiningFarm}
+              />
+              <DeleteMiningFarmModal
+                isOpen={isDeleteModalOpened}
+                onClose={() => {
+                  setIsDeleteModalOpened(false);
+                  setSelectedMiningFarm(null);
+                }}
+                onSubmit={refetchMiningFarms}
+                values={selectedMiningFarm}
+              />
+            </>
           }
         />
       )}

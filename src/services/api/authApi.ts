@@ -45,7 +45,7 @@ const authApi = axios.create({
   },
 });
 
-const requestInterceptor = R.pipe(requestSnakeCased, applyToken);
+const requestInterceptor = R.pipe(applyToken);
 
 authApi.interceptors.request.use(requestInterceptor);
 authApi.interceptors.response.use(

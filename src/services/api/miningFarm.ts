@@ -2,15 +2,39 @@ import * as R from 'ramda';
 
 import { DEFAULT_PARAMS, getQueryParams } from '../../utils';
 import authApi from './authApi';
-import { ManufacterType, RequestWithQueryType } from './manufacter';
+import { RequestWithQueryType } from './manufacter';
+
+const mapResponceToState = (obj: any) => ({
+  ...obj,
+  manufacturer: obj.manufacturer.name,
+});
 
 export const fetchMiningFarms = (
   params?: RequestWithQueryType,
 ): Promise<MiningFarmType[]> => {
   const queryParams = getQueryParams({ ...DEFAULT_PARAMS, ...params });
 
-  return authApi.get(`/miningFarms?${queryParams}`).then(R.prop('data'));
+  return authApi
+    .get(`/miningFarms?${queryParams}`)
+    .then(R.prop('data'))
+    .then(R.map(mapResponceToState));
 };
+
+export const createMiningFarm = (
+  params: CreateMiningFarmType,
+): Promise<MiningFarmType> =>
+  authApi
+    .post('/miningFarms/', params)
+    .then(R.prop('data'))
+    .then(mapResponceToState);
+
+export const updateMiningFarm = (
+  params: UpdateMiningFarmType,
+): Promise<MiningFarmType> =>
+  authApi
+    .put(`/miningFarms/${params.id}`, R.omit(['id'], params))
+    .then(R.prop('data'))
+    .then(mapResponceToState);
 
 export const deleteMiningFarm = (id: MiningFarmType['id']): Promise<void> =>
   authApi.delete(`/miningFarms/${id}`);
@@ -20,7 +44,7 @@ export type MiningFarmType = {
   id: number;
   model: string;
   alsoAsKnownAs: string;
-  releaseDate: Date;
+  releaseDate: string;
   size: string;
   weight: string;
   noiseLevel: string;
@@ -35,9 +59,19 @@ export type MiningFarmType = {
   temperature: string;
   humidity: string;
   priceUsd: number;
-  manufacturer: ManufacterType;
-  createdWhen: Date;
+  manufacturer: string; // TODO: Partial<ManufacterType>;
+  createdWhen: string;
   createdBy: string;
-  modifiedWhen: Date;
+  modifiedWhen: string;
   modifiedBy: string;
 };
+
+export type CreateMiningFarmType = Omit<
+  MiningFarmType,
+  'id' | 'createdWhen' | 'createdBy' | 'modifiedWhen' | 'modifiedBy'
+>;
+
+export type UpdateMiningFarmType = Omit<
+  MiningFarmType,
+  'createdWhen' | 'createdBy' | 'modifiedWhen' | 'modifiedBy'
+>;
