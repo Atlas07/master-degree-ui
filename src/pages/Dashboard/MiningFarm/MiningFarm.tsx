@@ -14,6 +14,7 @@ import GeneralTable from '../../../organisms/GeneralTable';
 import { ErrorResponse } from '../../../services/api/guestApi';
 import {
   fetchMiningFarms,
+  findMiningFarms,
   MiningFarmType,
 } from '../../../services/api/miningFarm';
 import { TABLE_COLUMNS } from './columns';
@@ -82,6 +83,8 @@ const MiningFarm = () => {
 
   const handleSearchSubmit = () => {
     setError(null);
+
+    findMiningFarms(search).then(setMiningFarms).catch(setError);
   };
 
   const refetchMiningFarms = () => {

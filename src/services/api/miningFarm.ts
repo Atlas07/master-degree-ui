@@ -36,6 +36,14 @@ export const updateMiningFarm = (
     .then(R.prop('data'))
     .then(mapResponceToState);
 
+export const findMiningFarms = (
+  model: MiningFarmType['model'],
+): Promise<MiningFarmType[]> =>
+  authApi
+    .get(`/miningFarms/search?name=${model}`)
+    .then(R.prop('data'))
+    .then(R.map(mapResponceToState));
+
 export const deleteMiningFarm = (id: MiningFarmType['id']): Promise<void> =>
   authApi.delete(`/miningFarms/${id}`);
 
