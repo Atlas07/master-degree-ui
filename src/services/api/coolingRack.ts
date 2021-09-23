@@ -16,6 +16,9 @@ export const fetchCoolingRacks = (
     .then(R.map(mapResponseManufacterToState));
 };
 
+export const deleteCoolingRack = (id: CoolingRackType['id']): Promise<void> =>
+  authApi.delete(`/miningCoolingRacks/${id}`);
+
 export type CoolingRackType = {
   id: number;
   model: string;

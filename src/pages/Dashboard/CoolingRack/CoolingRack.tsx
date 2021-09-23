@@ -17,6 +17,7 @@ import {
 } from '../../../services/api/coolingRack';
 import { ErrorResponse } from '../../../services/api/guestApi';
 import { TABLE_COLUMNS } from './columns';
+import DeleteCoolingRackModal from './DeleteCoolingRackModal';
 
 type MiningFarmCellType = Column<CoolingRackType>;
 type ActionCellType = CellProps<CoolingRackType, CoolingRackType>;
@@ -120,28 +121,19 @@ const CoolingRack = () => {
           headerGroups={headerGroups}
           rows={rows}
           prepareRow={prepareRow}
-          // modals={
-          // <>
-          //   <MiningFarmModal
-          //     isOpen={isModalOpened}
-          //     onClose={() => {
-          //       setIsModalOpened(false);
-          //       setSelectedMiningFarm(null);
-          //     }}
-          //     onSubmit={refetchMiningFarms}
-          //     initialValues={selectedMiningFarm}
-          //   />
-          //   <DeleteMiningFarmModal
-          //     isOpen={isDeleteModalOpened}
-          //     onClose={() => {
-          //       setIsDeleteModalOpened(false);
-          //       setSelectedMiningFarm(null);
-          //     }}
-          //     onSubmit={refetchMiningFarms}
-          //     values={selectedMiningFarm}
-          //   />
-          // </>
-          // }
+          modals={
+            <>
+              <DeleteCoolingRackModal
+                isOpen={isDeleteModalOpened}
+                onClose={() => {
+                  setIsDeleteModalOpened(false);
+                  setSelectedCoolingRack(null);
+                }}
+                onSubmit={refetchCoolingRacks}
+                values={selectedCoolingRack}
+              />
+            </>
+          }
         />
       )}
     </Wrapper>
