@@ -1,29 +1,6 @@
-import { format } from 'date-fns';
 import * as R from 'ramda';
 
-// import { CreateMiningFarmType } from '../../../services/api/coolingRack';
 import { getOptionalTableValue } from '../../../utils';
-
-// export const initialDefaultValues: CreateMiningFarmType = {
-//   model: '',
-//   alsoAsKnownAs: '',
-//   releaseDate: format(new Date(), 'yyyy-MM'),
-//   size: '',
-//   weight: '',
-//   noiseLevel: '',
-//   fans: 1,
-//   chipCount: 1,
-//   rackFormat: '',
-//   cooling: '',
-//   power: '10',
-//   voltage: '10',
-//   interfaceName: '',
-//   memory: '',
-//   temperature: '',
-//   humidity: '',
-//   priceUsd: 100,
-//   manufacturer: '',
-// };
 
 const ACTIVE_COLUMNS = [
   'model',
@@ -38,7 +15,13 @@ const ACTIVE_COLUMNS = [
   'modifiedBy',
 ];
 
-// const MODAL_FIELDS = R.keys(initialDefaultValues) as string[];
+const MODAL_FIELDS_TO_HIDE = [
+  'id',
+  'createdWhen',
+  'createdBy',
+  'modifiedWhen',
+  'modifiedBy',
+];
 
 const COLUMNS = [
   {
@@ -119,6 +102,11 @@ export const TABLE_COLUMNS = COLUMNS.filter(column =>
   ACTIVE_COLUMNS.includes(column.accessor),
 ).map(R.assoc('Cell', getOptionalTableValue));
 
-// export const MODAL_INPUTS = COLUMNS.filter(column =>
-//   MODAL_FIELDS.includes(column.accessor),
-// );
+export const MODAL_INPUTS = COLUMNS.filter(
+  column => !MODAL_FIELDS_TO_HIDE.includes(column.accessor),
+);
+
+export const initialDefaultValues = MODAL_INPUTS.reduce(
+  (acc, value) => ({ ...acc, [value.accessor]: '' }),
+  {},
+);

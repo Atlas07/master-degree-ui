@@ -16,6 +16,22 @@ export const fetchCoolingRacks = (
     .then(R.map(mapResponseManufacterToState));
 };
 
+export const CreateCoolingRack = (
+  params: CreateCoolingRackType,
+): Promise<CoolingRackType> =>
+  authApi
+    .post(BASE_URL, params)
+    .then(R.prop('data'))
+    .then(mapResponseManufacterToState);
+
+export const updateCoolingRack = (
+  params: UpdateCoolingRackType,
+): Promise<CoolingRackType> =>
+  authApi
+    .put(`${BASE_URL}/${params.id}`, R.omit(['id'], params))
+    .then(R.prop('data'))
+    .then(mapResponseManufacterToState);
+
 export const findCoolingRacks = (
   model: CoolingRackType['model'],
 ): Promise<CoolingRackType[]> =>
@@ -46,6 +62,12 @@ export type CoolingRackType = {
   createdBy: string;
   modifiedWhen: string;
   modifiedBy: string;
+};
+
+export type CreateCoolingRackType = Partial<Omit<CoolingRackType, 'id'>>;
+
+export type UpdateCoolingRackType = Partial<Omit<CoolingRackType, 'id'>> & {
+  id: CoolingRackType['id'];
 };
 
 const BASE_URL = '/miningCoolingRacks';
