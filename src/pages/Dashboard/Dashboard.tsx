@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Pages } from '../../constants/pages';
 import useRequireAuth from '../../hooks/useRequireAuth';
 import NavigationBar from '../../organisms/NavigationBar';
+import CoolingRack from './CoolingRack';
 import Manufacter from './Manufacter';
 import MiningFarm from './MiningFarm';
 
@@ -22,6 +23,10 @@ const Dashboard = () => {
       <Switch>
         <Route path={`${Pages.DASHBOARD}/manufacter`} component={Manufacter} />
         <Route path={`${Pages.DASHBOARD}/mining-farm`} component={MiningFarm} />
+        <Route
+          path={`${Pages.DASHBOARD}/cooling-rack`}
+          component={CoolingRack}
+        />
       </Switch>
     </Wrapper>
   );

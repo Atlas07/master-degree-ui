@@ -1,12 +1,5 @@
 import * as R from 'ramda';
-import {
-  Dispatch,
-  FC,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { FC, FormEvent, useEffect, useState } from 'react';
 import { Alert, Form } from 'react-bootstrap';
 
 import CenteredModal from '../../../molecules/CenteredModal';
@@ -16,7 +9,6 @@ import {
   CreateMiningFarmType,
   MiningFarmType,
   updateMiningFarm,
-  UpdateMiningFarmType,
 } from '../../../services/api/miningFarm';
 import { initialDefaultValues, MODAL_INPUTS } from './columns';
 
@@ -58,6 +50,7 @@ const MiningFarmModal: FC<Props> = ({
     request
       .then(onSubmit)
       .then(onClose)
+      // TODO: ViolationError
       .catch((err: ErrorResponse) =>
         setError(err?.message ?? 'Unexpected error.'),
       );

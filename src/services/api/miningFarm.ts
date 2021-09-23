@@ -1,13 +1,9 @@
 import * as R from 'ramda';
 
 import { DEFAULT_PARAMS, getQueryParams } from '../../utils';
+import { mapResponseManufacterToState } from '../../utils/mapResponseManufacterToState';
 import authApi from './authApi';
 import { RequestWithQueryType } from './manufacter';
-
-const mapResponceToState = (obj: any) => ({
-  ...obj,
-  manufacturer: obj.manufacturer.name,
-});
 
 export const fetchMiningFarms = (
   params?: RequestWithQueryType,
@@ -17,7 +13,7 @@ export const fetchMiningFarms = (
   return authApi
     .get(`/miningFarms?${queryParams}`)
     .then(R.prop('data'))
-    .then(R.map(mapResponceToState));
+    .then(R.map(mapResponseManufacterToState));
 };
 
 export const createMiningFarm = (
@@ -26,7 +22,7 @@ export const createMiningFarm = (
   authApi
     .post('/miningFarms/', params)
     .then(R.prop('data'))
-    .then(mapResponceToState);
+    .then(mapResponseManufacterToState);
 
 export const updateMiningFarm = (
   params: UpdateMiningFarmType,
@@ -34,7 +30,7 @@ export const updateMiningFarm = (
   authApi
     .put(`/miningFarms/${params.id}`, R.omit(['id'], params))
     .then(R.prop('data'))
-    .then(mapResponceToState);
+    .then(mapResponseManufacterToState);
 
 export const findMiningFarms = (
   model: MiningFarmType['model'],
@@ -42,7 +38,7 @@ export const findMiningFarms = (
   authApi
     .get(`/miningFarms/search?name=${model}`)
     .then(R.prop('data'))
-    .then(R.map(mapResponceToState));
+    .then(R.map(mapResponseManufacterToState));
 
 export const deleteMiningFarm = (id: MiningFarmType['id']): Promise<void> =>
   authApi.delete(`/miningFarms/${id}`);

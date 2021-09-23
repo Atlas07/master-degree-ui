@@ -52,7 +52,11 @@ const NavigationBar: FC<Props> = () => {
             >
               Mining farm
             </NavDropdown.Item>
-            <NavDropdown.Item>Cooling rack</NavDropdown.Item>
+            <NavDropdown.Item
+              onClick={() => history.push(`${Pages.DASHBOARD}/cooling-rack`)}
+            >
+              Cooling rack
+            </NavDropdown.Item>
             <NavDropdown.Item>Fan</NavDropdown.Item>
             <NavDropdown.Item>Air conditioning devices</NavDropdown.Item>
             <NavDropdown.Item>Air handiling unit</NavDropdown.Item>
