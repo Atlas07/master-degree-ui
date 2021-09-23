@@ -14,6 +14,7 @@ import GeneralTable from '../../../organisms/GeneralTable';
 import {
   CoolingRackType,
   fetchCoolingRacks,
+  findCoolingRacks,
 } from '../../../services/api/coolingRack';
 import { ErrorResponse } from '../../../services/api/guestApi';
 import { TABLE_COLUMNS } from './columns';
@@ -73,6 +74,20 @@ const CoolingRack = () => {
       data: R.isNil(coolingRacks) ? [] : coolingRacks,
     });
 
+  const handleSearchChange = (
+    e: FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSearch(e.currentTarget.value);
+  };
+
+  const handleSearchSubmit = () => {
+    setError(null);
+
+    findCoolingRacks(search).then(setCoolingRacks).catch(setError);
+  };
+
   const refetchCoolingRacks = () => {
     setError(null);
 
@@ -92,14 +107,14 @@ const CoolingRack = () => {
             placeholder="Search for mining farm"
             aria-label=""
             value={search}
-            // onChange={handleSearchChange}
+            onChange={handleSearchChange}
           />
           <Button variant="outline-secondary" onClick={() => setSearch('')}>
             Clear
           </Button>
-          {/* <Button variant="outline-secondary" onClick={handleSearchSubmit}>
+          <Button variant="outline-secondary" onClick={handleSearchSubmit}>
             Search
-          </Button> */}
+          </Button>
         </InputGroupStyled>
         <ButtonStyled variant="primary" onClick={() => setIsModalOpened(true)}>
           Add new

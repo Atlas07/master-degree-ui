@@ -11,13 +11,21 @@ export const fetchCoolingRacks = (
   const queryParams = getQueryParams({ ...DEFAULT_PARAMS, ...params });
 
   return authApi
-    .get(`/miningCoolingRacks?${queryParams}`)
+    .get(`${BASE_URL}?${queryParams}`)
     .then(R.prop('data'))
     .then(R.map(mapResponseManufacterToState));
 };
 
+export const findCoolingRacks = (
+  model: CoolingRackType['model'],
+): Promise<CoolingRackType[]> =>
+  authApi
+    .get(`${BASE_URL}/search?name=${model}`)
+    .then(R.prop('data'))
+    .then(R.map(mapResponseManufacterToState));
+
 export const deleteCoolingRack = (id: CoolingRackType['id']): Promise<void> =>
-  authApi.delete(`/miningCoolingRacks/${id}`);
+  authApi.delete(`${BASE_URL}/${id}`);
 
 export type CoolingRackType = {
   id: number;
@@ -39,3 +47,5 @@ export type CoolingRackType = {
   modifiedWhen: string;
   modifiedBy: string;
 };
+
+const BASE_URL = '/miningCoolingRacks';
