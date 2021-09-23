@@ -6,6 +6,7 @@ import { Pages } from '../../constants/pages';
 import useRequireAuth from '../../hooks/useRequireAuth';
 import NavigationBar from '../../organisms/NavigationBar';
 import CoolingRack from './CoolingRack';
+import Fan from './Fan';
 import Manufacter from './Manufacter';
 import MiningFarm from './MiningFarm';
 
@@ -27,6 +28,7 @@ const Dashboard = () => {
           path={`${Pages.DASHBOARD}/cooling-rack`}
           component={CoolingRack}
         />
+        <Route path={`${Pages.DASHBOARD}/fan`} component={Fan} />
       </Switch>
     </Wrapper>
   );
