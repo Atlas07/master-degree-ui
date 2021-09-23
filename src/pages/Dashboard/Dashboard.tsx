@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Pages } from '../../constants/pages';
 import useRequireAuth from '../../hooks/useRequireAuth';
 import NavigationBar from '../../organisms/NavigationBar';
+import AirConditioningDevices from './AirConditioningDevices';
 import CoolingRack from './CoolingRack';
 import Fan from './Fan';
 import Manufacter from './Manufacter';
@@ -29,6 +30,10 @@ const Dashboard = () => {
           component={CoolingRack}
         />
         <Route path={`${Pages.DASHBOARD}/fan`} component={Fan} />
+        <Route
+          path={`${Pages.DASHBOARD}/air-conditioning-device`}
+          component={AirConditioningDevices}
+        />
       </Switch>
     </Wrapper>
   );
