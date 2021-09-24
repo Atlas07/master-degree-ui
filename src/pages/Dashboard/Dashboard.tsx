@@ -6,6 +6,7 @@ import { Pages } from '../../constants/pages';
 import useRequireAuth from '../../hooks/useRequireAuth';
 import NavigationBar from '../../organisms/NavigationBar';
 import AirConditioningDevices from './AirConditioningDevices';
+import AirHandlingUnit from './AirHandlingUnit';
 import CoolingRack from './CoolingRack';
 import Fan from './Fan';
 import Manufacter from './Manufacter';
@@ -33,6 +34,10 @@ const Dashboard = () => {
         <Route
           path={`${Pages.DASHBOARD}/air-conditioning-device`}
           component={AirConditioningDevices}
+        />
+        <Route
+          path={`${Pages.DASHBOARD}/air-handling-unit`}
+          component={AirHandlingUnit}
         />
       </Switch>
     </Wrapper>

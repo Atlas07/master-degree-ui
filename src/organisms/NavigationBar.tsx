@@ -69,7 +69,13 @@ const NavigationBar: FC<Props> = () => {
             >
               Air conditioning devices
             </NavDropdown.Item>
-            <NavDropdown.Item>Air handiling unit</NavDropdown.Item>
+            <NavDropdown.Item
+              onClick={() =>
+                history.push(`${Pages.DASHBOARD}/air-handling-unit`)
+              }
+            >
+              Air handiling unit
+            </NavDropdown.Item>
           </NavDropdown>
 
           <Nav.Link>Order</Nav.Link>
