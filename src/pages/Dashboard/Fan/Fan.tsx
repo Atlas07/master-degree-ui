@@ -17,7 +17,7 @@ import { TABLE_COLUMNS } from './columns';
 import DeleteFanModal from './DeleteFanModal';
 import FanModal from './FanModal';
 
-type MiningFarmCellType = Column<FanType>;
+type CellType = Column<FanType>;
 type ActionCellType = CellProps<FanType, FanType>;
 
 const MiningFarm = () => {
@@ -30,9 +30,9 @@ const MiningFarm = () => {
     null,
   );
 
-  const columns: MiningFarmCellType[] = useMemo(
+  const columns: CellType[] = useMemo(
     () => [
-      ...(TABLE_COLUMNS as MiningFarmCellType[]),
+      ...(TABLE_COLUMNS as CellType[]),
       {
         id: 'controls',
         Header: '',
@@ -121,7 +121,9 @@ const MiningFarm = () => {
 
       {fans === null && <Spinner animation="border" />}
 
-      {fans?.length === 0 && <Alert variant="primary">There is no fans.</Alert>}
+      {fans?.length === 0 && (
+        <Alert variant="primary">There are no fans.</Alert>
+      )}
 
       {!error && fans?.length !== 0 && (
         <GeneralTable<FanType>
