@@ -11,6 +11,7 @@ import CoolingRack from './CoolingRack';
 import Fan from './Fan';
 import Manufacter from './Manufacter';
 import MiningFarm from './MiningFarm';
+import Order from './Order';
 
 const Dashboard = () => {
   const auth = useRequireAuth();
@@ -39,6 +40,7 @@ const Dashboard = () => {
           path={`${Pages.DASHBOARD}/air-handling-unit`}
           component={AirHandlingUnit}
         />
+        <Route path={`${Pages.DASHBOARD}/order`} component={Order} />
       </Switch>
     </Wrapper>
   );

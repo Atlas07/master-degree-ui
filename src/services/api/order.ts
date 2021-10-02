@@ -10,7 +10,7 @@ import { RequestWithQueryType } from './manufacter';
 import { MiningFarmType } from './miningFarm';
 
 export const fetchOrders = (
-  params?: RequestWithQueryType,
+  params?: Partial<RequestWithQueryType>,
 ): Promise<OrderType[]> => {
   const queryParams = getQueryParams({ ...DEFAULT_PARAMS, ...params });
 

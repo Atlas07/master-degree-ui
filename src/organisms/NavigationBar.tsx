@@ -78,7 +78,9 @@ const NavigationBar: FC<Props> = () => {
             </NavDropdown.Item>
           </NavDropdown>
 
-          <Nav.Link>Order</Nav.Link>
+          <Nav.Link onClick={() => history.push(`${Pages.DASHBOARD}/order`)}>
+            Order
+          </Nav.Link>
         </Nav>
 
         {/* 
