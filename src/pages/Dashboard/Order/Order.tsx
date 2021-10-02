@@ -12,8 +12,24 @@ import styled from 'styled-components';
 
 import GeneralTable from '../../../organisms/GeneralTable';
 import { ErrorResponse } from '../../../services/api/guestApi';
-import { fetchOrders, OrderType } from '../../../services/api/order';
-import { TABLE_COLUMNS } from './columns';
+import {
+  fetchOrders,
+  OrderActionHistoryType,
+  OrderAirConditioningDeviceType,
+  OrderFanType,
+  OrderMiningCoolingRackType,
+  OrderMiningFarmType,
+  OrderType,
+} from '../../../services/api/order';
+import {
+  ORDER_ACTION_HISTORY_COLUMNS,
+  ORDER_AIR_CONDITION_DEVICE_COLUMNS,
+  ORDER_AIR_HANDLING_UNIT_COLUMNS,
+  ORDER_FAN_COLUMNS,
+  ORDER_MINING_FARM_COLUMNS,
+  TABLE_COLUMNS,
+} from './columns';
+import InnerTable from './InnerTable';
 
 type CellType = Column<OrderType>;
 type ActionCellType = CellProps<OrderType, OrderType>;
@@ -25,33 +41,114 @@ const Order = ({}) => {
   const columns: CellType[] = useMemo(
     () => [
       ...(TABLE_COLUMNS as CellType[]),
-      // {
-      //   id: 'controls',
-      //   Header: '',
-      //   accessor: fan => fan,
-      //   Cell: (data: ActionCellType) => (
-      //     <TableControls>
-      //       <Button
-      //         variant="outline-warning"
-      //         onClick={() => {
-      //           setSelectedMiningFarm(data.value);
-      //           setIsModalOpened(true);
-      //         }}
-      //       >
-      //         Edit
-      //       </Button>
-      //       <Button
-      //         variant="outline-danger"
-      //         onClick={() => {
-      //           setSelectedMiningFarm(data.value);
-      //           setIsDeleteModalOpened(true);
-      //         }}
-      //       >
-      //         Delete
-      //       </Button>
-      //     </TableControls>
-      //   ),
-      // },
+      {
+        Header: 'Action history',
+        accessor: 'orderActionHistory',
+        Cell: ({ value }) =>
+          value.length ? (
+            <InnerTable<OrderActionHistoryType>
+              data={value}
+              columns={ORDER_ACTION_HISTORY_COLUMNS}
+            />
+          ) : (
+            '-'
+          ),
+      },
+      {
+        Header: 'Mining Farms',
+        accessor: 'orderMiningFarms',
+        Cell: ({ value }) =>
+          value.length ? (
+            <InnerTable<OrderMiningFarmType>
+              // @ts-ignore
+              data={value.map(order => ({
+                amount: order.amount,
+                orderDevicePurpose: order.orderDevicePurpose,
+                id: order.miningFarm.id,
+              }))}
+              // @ts-ignore
+              columns={ORDER_MINING_FARM_COLUMNS}
+            />
+          ) : (
+            '-'
+          ),
+      },
+      {
+        Header: 'Cooling Racks',
+        accessor: 'orderMiningCoolingRacks',
+        Cell: ({ value }) =>
+          value.length ? (
+            <InnerTable<OrderMiningCoolingRackType>
+              // @ts-ignore
+              data={value.map(order => ({
+                amount: order.amount,
+                orderDevicePurpose: order.orderDevicePurpose,
+                id: order.miningCooling.id,
+              }))}
+              // @ts-ignore
+              columns={ORDER_MINING_COOLING_RACK_COLUMNS}
+            />
+          ) : (
+            '-'
+          ),
+      },
+      {
+        Header: 'Air Condition Devices',
+        accessor: 'orderAirConditioningDevices',
+        Cell: ({ value }) =>
+          value.length ? (
+            <InnerTable<OrderAirConditioningDeviceType>
+              // @ts-ignore
+              data={value.map(order => ({
+                amount: order.amount,
+                orderDevicePurpose: order.orderDevicePurpose,
+                id: order.airConditioningDevice.id,
+              }))}
+              // @ts-ignore
+              columns={ORDER_AIR_CONDITION_DEVICE_COLUMNS}
+            />
+          ) : (
+            '-'
+          ),
+      },
+      {
+        Header: 'Air Handling Units',
+        accessor: 'orderAirHandlingUnits',
+        Cell: ({ value }) =>
+          value.length ? (
+            <InnerTable<OrderAirConditioningDeviceType>
+              // @ts-ignore
+              data={value.map(order => ({
+                amount: order.amount,
+                orderDevicePurpose: order.orderDevicePurpose,
+                id: order.airHandlingUnit.id,
+              }))}
+              // @ts-ignore
+              columns={ORDER_AIR_HANDLING_UNIT_COLUMNS}
+            />
+          ) : (
+            '-'
+          ),
+      },
+      {
+        Header: 'Fans',
+        accessor: 'orderFanDs',
+        Cell: ({ value }) =>
+          value.length ? (
+            <InnerTable<OrderFanType>
+              // @ts-ignore
+              data={value.map(order => ({
+                amount: order.amount,
+                orderDevicePurpose: order.orderDevicePurpose,
+                id: order.fan.id,
+              }))}
+              // @ts-ignore
+              columns={ORDER_FAN_COLUMNS}
+            />
+          ) : (
+            '-'
+          ),
+      },
     ],
     [],
   );
