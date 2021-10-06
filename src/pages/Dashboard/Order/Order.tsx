@@ -19,9 +19,11 @@ import {
   OrderFanType,
   OrderMiningCoolingRackType,
   OrderMiningFarmType,
+  OrderStatusMap,
   OrderType,
 } from '../../../services/api/order';
 import {
+  COLUMNS,
   ORDER_ACTION_HISTORY_COLUMNS,
   ORDER_AIR_CONDITION_DEVICE_COLUMNS,
   ORDER_AIR_HANDLING_UNIT_COLUMNS,
@@ -30,16 +32,64 @@ import {
   TABLE_COLUMNS,
 } from './columns';
 import InnerTable from './InnerTable';
+import ProcessModal from './ProcessModal';
 
 type CellType = Column<OrderType>;
 type ActionCellType = CellProps<OrderType, OrderType>;
 
-const Order = ({}) => {
+const tableFilters = R.pluck('accessor', COLUMNS);
+
+const Order = () => {
   const [orders, setOrders] = useState<OrderType[] | null>(null);
   const [error, setError] = useState<ErrorResponse | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null);
+  const [isProcessStatusModalOpened, setIsProcessStatusModalOpened] =
+    useState(false);
 
   const columns: CellType[] = useMemo(
     () => [
+      {
+        id: 'controls',
+        Header: '',
+        accessor: order => order,
+        Cell: (data: ActionCellType) => {
+          const { value } = data;
+
+          return (
+            <TableControls>
+              <Button
+                // @ts-ignore
+                disabled={value.status === OrderStatusMap.CANCELLED}
+                variant="outline-primary"
+                onClick={() => {
+                  setSelectedOrder(value);
+                  setIsProcessStatusModalOpened(true);
+                }}
+              >
+                Process
+              </Button>
+              <Button
+                variant="outline-warning"
+                onClick={() => {
+                  // setSelectedMiningFarm(data.value);
+                  // setIsModalOpened(true);
+                }}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="outline-success"
+                onClick={() => {
+                  // setSelectedMiningFarm(data.value);
+                  // setIsDeleteModalOpened(true);
+                }}
+              >
+                Create
+              </Button>
+            </TableControls>
+          );
+        },
+      },
       ...(TABLE_COLUMNS as CellType[]),
       {
         Header: 'Action history',
@@ -188,6 +238,17 @@ const Order = ({}) => {
           headerGroups={headerGroups}
           rows={rows}
           prepareRow={prepareRow}
+          modals={
+            <ProcessModal
+              isOpen={isProcessStatusModalOpened}
+              onClose={() => {
+                setIsProcessStatusModalOpened(false);
+                setSelectedOrder(null);
+              }}
+              onSubmit={refetchOrders}
+              values={selectedOrder as OrderType}
+            />
+          }
         />
       )}
     </Wrapper>

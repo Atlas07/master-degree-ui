@@ -26,7 +26,7 @@ const ACTIVE_COLUMNS = [
 //   'modifiedBy',
 // ];
 
-const COLUMNS = [
+export const COLUMNS = [
   {
     Header: '#',
     accessor: 'orderId',

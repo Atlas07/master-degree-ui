@@ -17,6 +17,17 @@ export const fetchOrders = (
   return authApi.get(`${BASE_URL}?${queryParams}`).then(R.prop('data'));
 };
 
+export const processOrder = (params: {
+  orderId: OrderType['orderId'];
+  statusTo: OrderType['status'];
+  waitingActionUsername: OrderType['waitingActionUsername'];
+  actionComment?: string;
+}): Promise<OrderType> =>
+  authApi.patch(
+    `${BASE_URL}/process/${params.orderId}`,
+    R.omit(['id'], params),
+  );
+
 export type OrderType = {
   orderId: number;
   status: OrderStatusType;
@@ -55,14 +66,17 @@ export type OrderEntityType<K extends string, T> = Record<K, T> & {
   orderDevicePurpose: OrderDevicePurposeType;
 };
 
-export type OrderStatusType =
-  | 'EMPTY'
-  | 'PLANNED'
-  | 'IN_PROGRESS'
-  | 'SUSPENDED'
-  | 'CANCELLED'
-  | 'COMPLETED'
-  | 'WAITING_FOR_ACTION';
+export enum OrderStatusMap {
+  EMPTY = 'Empty',
+  PLANNED = 'Planned',
+  IN_PROGRESS = 'In progress',
+  SUSPENDED = 'Suspended',
+  CANCELLED = 'Cancelled',
+  COMPLETED = 'Completed',
+  WAITING_FOR_ACTION = 'Waiting for action',
+}
+
+export type OrderStatusType = typeof OrderStatusMap;
 
 export type OrderDevicePurposeType =
   | 'PURCHASE'
