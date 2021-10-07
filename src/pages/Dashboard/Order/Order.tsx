@@ -14,6 +14,7 @@ import GeneralTable from '../../../organisms/GeneralTable';
 import { ErrorResponse } from '../../../services/api/guestApi';
 import {
   fetchOrders,
+  findOrders,
   OrderActionHistoryType,
   OrderAirConditioningDeviceType,
   OrderFanType,
@@ -41,8 +42,10 @@ const tableFilters = R.pluck('accessor', COLUMNS);
 
 const Order = () => {
   const [orders, setOrders] = useState<OrderType[] | null>(null);
+  const [search, setSearch] = useState('');
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null);
+  const [isNewModalOpened, setIsNewModalOpened] = useState(false);
   const [isProcessStatusModalOpened, setIsProcessStatusModalOpened] =
     useState(false);
 
@@ -58,8 +61,12 @@ const Order = () => {
           return (
             <TableControls>
               <Button
-                // @ts-ignore
-                disabled={value.status === OrderStatusMap.CANCELLED}
+                disabled={
+                  // @ts-ignore
+                  value.status === OrderStatusMap.CANCELLED ||
+                  // @ts-ignore
+                  value.status === OrderStatusMap.COMPLETED
+                }
                 variant="outline-primary"
                 onClick={() => {
                   setSelectedOrder(value);
@@ -77,7 +84,7 @@ const Order = () => {
               >
                 Edit
               </Button>
-              <Button
+              {/* <Button
                 variant="outline-success"
                 onClick={() => {
                   // setSelectedMiningFarm(data.value);
@@ -85,7 +92,7 @@ const Order = () => {
                 }}
               >
                 Create
-              </Button>
+              </Button> */}
             </TableControls>
           );
         },
@@ -209,6 +216,20 @@ const Order = () => {
       data: R.isNil(orders) ? [] : orders,
     });
 
+  const handleSearchChange = (
+    e: FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSearch(e.currentTarget.value);
+  };
+
+  const handleSearchSubmit = () => {
+    setError(null);
+
+    findOrders(search).then(setOrders).catch(setError);
+  };
+
   const refetchOrders = () => {
     setError(null);
 
@@ -222,6 +243,29 @@ const Order = () => {
   return (
     <Wrapper>
       <Header>Order Page</Header>
+
+      <Controls>
+        <InputGroupStyled>
+          <FormControl
+            placeholder="Search for orders"
+            aria-label=""
+            value={search}
+            onChange={handleSearchChange}
+          />
+          <Button variant="outline-secondary" onClick={() => setSearch('')}>
+            Clear
+          </Button>
+          <Button variant="outline-secondary" onClick={handleSearchSubmit}>
+            Search
+          </Button>
+        </InputGroupStyled>
+        <ButtonStyled
+          variant="primary"
+          onClick={() => setIsNewModalOpened(true)}
+        >
+          Add new
+        </ButtonStyled>
+      </Controls>
 
       {error && <Alert variant="danger">{error.message}</Alert>}
 

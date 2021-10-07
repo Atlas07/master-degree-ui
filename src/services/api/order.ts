@@ -28,6 +28,9 @@ export const processOrder = (params: {
     R.omit(['id'], params),
   );
 
+export const findOrders = (name: OrderType['name']): Promise<OrderType[]> =>
+  authApi.get(`${BASE_URL}/namedSearch?name=${name}`).then(R.prop('data'));
+
 export type OrderType = {
   orderId: number;
   status: OrderStatusType;

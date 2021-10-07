@@ -148,7 +148,7 @@ const ProcessModal: FC<Props> = ({ isOpen, onClose, onSubmit, values }) => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicInput">
-              <Form.Label>Waiting user to act</Form.Label>
+              <Form.Label>Assign to</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter waiting user to act"
