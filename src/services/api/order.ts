@@ -31,10 +31,13 @@ export const processOrder = (params: {
 export const findOrders = (name: OrderType['name']): Promise<OrderType[]> =>
   authApi.get(`${BASE_URL}/namedSearch?name=${name}`).then(R.prop('data'));
 
+export const createOrder = (params: CreateOrderType): Promise<OrderType> =>
+  authApi.post(`${BASE_URL}/initiate`, params).then(R.prop('data'));
+
 export type OrderType = {
   orderId: number;
-  status: OrderStatusType;
-  orderType: OrderDevicePurposeType;
+  status: OrderStatusMap;
+  orderType: OrderDevicePurposeMap;
   name: string;
   waitingActionUsername: string;
   orderActionHistory: OrderActionHistoryType[];
@@ -43,6 +46,21 @@ export type OrderType = {
   orderAirConditioningDevices: OrderAirConditioningDeviceType[];
   orderAirHandlingUnits: OrderAirHandlingUnitType[];
   orderFanDs: OrderFanType[];
+};
+
+export type CreateOrderType = Pick<
+  OrderType,
+  'status' | 'orderType' | 'waitingActionUsername'
+> & {
+  actionComment?: string;
+  orderMiningFarms: OrderEntityType<'miningFarmId', number>[];
+  orderMiningCoolingRacks: OrderEntityType<'miningCoolingRackId', number>[];
+  orderAirConditioningDevices: OrderEntityType<
+    'airConditioningDeviceId',
+    number
+  >[];
+  orderAirHandlingUnits: OrderEntityType<'airHandlingUnitId', number>[];
+  orderFanDs: OrderEntityType<'fanId', number>[];
 };
 
 export type OrderMiningFarmType = OrderEntityType<'miningFarm', MiningFarmType>;
@@ -66,7 +84,7 @@ export type OrderFanType = OrderEntityType<'fan', FanType>;
 
 export type OrderEntityType<K extends string, T> = Record<K, T> & {
   amount: number;
-  orderDevicePurpose: OrderDevicePurposeType;
+  orderDevicePurpose: OrderDevicePurposeMap;
 };
 
 export enum OrderStatusMap {
@@ -79,21 +97,24 @@ export enum OrderStatusMap {
   WAITING_FOR_ACTION = 'Waiting for action',
 }
 
-export type OrderStatusType = typeof OrderStatusMap;
+// export type OrderStatusType = typeof OrderStatusMap;
 
-export type OrderDevicePurposeType =
-  | 'PURCHASE'
-  | 'MAINTENANCE'
-  | 'INSTALLATION'
-  | 'RECONFIGURATION'
-  | 'REPLACING';
+export enum OrderDevicePurposeMap {
+  PURCHASE = 'Purchase',
+  MAINTENANCE = 'Maintenance',
+  INSTALLATION = 'Installation',
+  RECONFIGURATION = 'Reconfiguration',
+  REPLACING = 'Replacing',
+}
+
+// export type OrderDevicePurposeType = typeof OrderDevicePurposeMap;
 
 export type OrderActionHistoryType = {
   id: number;
   actionExecutingDate: string;
   actionExecutionUsername: string;
-  statusFrom: OrderStatusType;
-  statusTo: OrderStatusType;
+  statusFrom: OrderStatusMap;
+  statusTo: OrderStatusMap;
   actionComment: string;
 };
 

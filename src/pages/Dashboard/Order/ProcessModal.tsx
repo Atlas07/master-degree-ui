@@ -5,7 +5,6 @@ import CenteredModal from '../../../molecules/CenteredModal';
 import { ErrorResponse } from '../../../services/api/guestApi';
 import {
   OrderStatusMap,
-  OrderStatusType,
   OrderType,
   processOrder,
 } from '../../../services/api/order';
@@ -101,10 +100,7 @@ const ProcessModal: FC<Props> = ({ isOpen, onClose, onSubmit, values }) => {
               <Form.Select
                 aria-label="Default select example"
                 value={String(status)}
-                onChange={(e: any) => {
-                  console.log(e.currentTarget.value);
-                  return setStatus(e.currentTarget.value as OrderStatusType);
-                }}
+                onChange={(e: any) => setStatus(e.currentTarget.value)}
               >
                 <option value={String(status)}>{status}</option>
                 {/* @ts-ignore */}
@@ -113,25 +109,6 @@ const ProcessModal: FC<Props> = ({ isOpen, onClose, onSubmit, values }) => {
                     {statusItem}
                   </option>
                 ))}
-
-                {/* <option value={OrderStatusMap.EMPTY}>
-                  {OrderStatusMap.EMPTY}
-                </option>
-                <option value={OrderStatusMap.PLANNED}>
-                  {OrderStatusMap.PLANNED}
-                </option>
-                <option value={OrderStatusMap.CANCELLED}>
-                  {OrderStatusMap.CANCELLED}
-                </option>
-                <option value={OrderStatusMap.IN_PROGRESS}>
-                  {OrderStatusMap.IN_PROGRESS}
-                </option>
-                <option value={OrderStatusMap.SUSPENDED}>
-                  {OrderStatusMap.SUSPENDED}
-                </option>
-                <option value={OrderStatusMap.WAITING_FOR_ACTION}>
-                  {OrderStatusMap.WAITING_FOR_ACTION}
-                </option> */}
               </Form.Select>
             </Form.Group>
 

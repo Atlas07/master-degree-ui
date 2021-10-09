@@ -4,11 +4,14 @@ import { Column } from 'react-table';
 import {
   OrderActionHistoryType,
   OrderAirHandlingUnitType,
+  OrderDevicePurposeMap,
   OrderFanType,
   OrderMiningCoolingRackType,
   OrderMiningFarmType,
+  OrderStatusMap,
 } from '../../../services/api/order';
 import { getOptionalTableValue } from '../../../utils';
+import { ModalOrderType } from './OrderModal';
 
 const ACTIVE_COLUMNS = [
   'orderId',
@@ -183,3 +186,15 @@ export const ORDER_FAN_COLUMNS: Column<OrderFanType & { id: number }>[] = [
     accessor: 'id',
   },
 ];
+
+export const initialOrderDefaultValues: ModalOrderType = {
+  status: OrderStatusMap.PLANNED,
+  orderType: OrderDevicePurposeMap.INSTALLATION,
+  waitingActionUsername: '',
+  actionComment: '',
+  orderMiningFarms: [],
+  orderMiningCoolingRacks: [],
+  orderAirConditioningDevices: [],
+  orderAirHandlingUnits: [],
+  orderFanDs: [],
+};

@@ -29,10 +29,12 @@ import {
   ORDER_AIR_CONDITION_DEVICE_COLUMNS,
   ORDER_AIR_HANDLING_UNIT_COLUMNS,
   ORDER_FAN_COLUMNS,
+  ORDER_MINING_COOLING_RACK_COLUMNS,
   ORDER_MINING_FARM_COLUMNS,
   TABLE_COLUMNS,
 } from './columns';
 import InnerTable from './InnerTable';
+import OrderModal from './OrderModal';
 import ProcessModal from './ProcessModal';
 
 type CellType = Column<OrderType>;
@@ -283,15 +285,28 @@ const Order = () => {
           rows={rows}
           prepareRow={prepareRow}
           modals={
-            <ProcessModal
-              isOpen={isProcessStatusModalOpened}
-              onClose={() => {
-                setIsProcessStatusModalOpened(false);
-                setSelectedOrder(null);
-              }}
-              onSubmit={refetchOrders}
-              values={selectedOrder as OrderType}
-            />
+            <>
+              <OrderModal
+                isOpen={isNewModalOpened}
+                onClose={() => {
+                  setIsNewModalOpened(false);
+                  setSelectedOrder(null);
+                }}
+                onSubmit={refetchOrders}
+                // @ts-ignore
+                initialValues={null}
+              />
+
+              <ProcessModal
+                isOpen={isProcessStatusModalOpened}
+                onClose={() => {
+                  setIsProcessStatusModalOpened(false);
+                  setSelectedOrder(null);
+                }}
+                onSubmit={refetchOrders}
+                values={selectedOrder as OrderType}
+              />
+            </>
           }
         />
       )}
