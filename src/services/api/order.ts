@@ -34,6 +34,9 @@ export const findOrders = (name: OrderType['name']): Promise<OrderType[]> =>
 export const createOrder = (params: CreateOrderType): Promise<OrderType> =>
   authApi.post(`${BASE_URL}/initiate`, params).then(R.prop('data'));
 
+export const updateOrder = (params: UpdateOrderType): Promise<OrderType> =>
+  authApi.patch(`${BASE_URL}/${params.orderId}`, R.omit(['orderId'], params));
+
 export type OrderType = {
   orderId: number;
   status: OrderStatusMap;
@@ -63,6 +66,16 @@ export type CreateOrderType = Pick<
   orderFanDs: OrderEntityType<'fanId', number>[];
 };
 
+export type UpdateOrderType = Pick<
+  CreateOrderType,
+  | 'orderMiningFarms'
+  | 'orderMiningCoolingRacks'
+  | 'orderAirConditioningDevices'
+  | 'orderAirHandlingUnits'
+  | 'orderFanDs'
+> &
+  Pick<OrderType, 'orderId'>;
+
 export type OrderMiningFarmType = OrderEntityType<'miningFarm', MiningFarmType>;
 
 export type OrderMiningCoolingRackType = OrderEntityType<
@@ -85,6 +98,7 @@ export type OrderFanType = OrderEntityType<'fan', FanType>;
 export type OrderEntityType<K extends string, T> = Record<K, T> & {
   amount: number;
   orderDevicePurpose: OrderDevicePurposeMap;
+  toDeleteFromOrder: boolean;
 };
 
 export enum OrderStatusMap {

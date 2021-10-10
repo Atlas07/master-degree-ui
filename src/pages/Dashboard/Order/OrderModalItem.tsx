@@ -18,6 +18,7 @@ type Props = {
 
 export type ItemType = OrderEntityType<'id', number> & {
   key: string;
+  isSaved?: boolean;
 };
 
 const createEmptyItem = (): ItemType => ({
@@ -25,6 +26,8 @@ const createEmptyItem = (): ItemType => ({
   amount: 0,
   orderDevicePurpose: OrderDevicePurposeMap.INSTALLATION,
   key: nanoid(),
+  toDeleteFromOrder: false,
+  isSaved: false,
 });
 
 const OrderModalItem: FC<Props> = ({
@@ -58,77 +61,91 @@ const OrderModalItem: FC<Props> = ({
     );
   };
 
+  const handleDeleteItem = (item: ItemType) => {
+    item.isSaved
+      ? setList(
+          R.map(
+            listItem =>
+              listItem.key === item.key
+                ? R.assoc('toDeleteFromOrder', true, listItem)
+                : listItem,
+            list,
+          ),
+        )
+      : setList(
+          R.filter<ItemType>(listItem => listItem.key !== item.key, list),
+        );
+  };
+
   return (
     <Wrapper className={className}>
       <Form.Label>{label}</Form.Label>
 
-      {list.map(item => (
-        <ItemsWrapper key={item.key}>
-          <Form.Group className="mb-1" controlId="formBasicEmail">
-            <Form.Label>Id</Form.Label>
-            <Form.Control
-              type="text"
-              value={item.id}
-              placeholder="Enter id"
-              onChange={(e: any) =>
-                handleItemChange('id', e.currentTarget.value, item)
-              }
-            />
-          </Form.Group>
-          <Form.Group className="mb-1" controlId="formBasicEmail">
-            <Form.Label>Amount</Form.Label>
-            <Form.Control
-              type="text"
-              value={item.amount}
-              placeholder="Enter quantity"
-              onChange={(e: any) =>
-                handleItemChange('amount', e.currentTarget.value, item)
-              }
-            />
-          </Form.Group>
+      {list
+        .filter(item => item.toDeleteFromOrder !== true)
+        .map(item => (
+          <ItemsWrapper key={item.key}>
+            <Form.Group className="mb-1" controlId="formBasicEmail">
+              <Form.Label>Id</Form.Label>
+              <Form.Control
+                type="text"
+                value={item.id}
+                placeholder="Enter id"
+                onChange={(e: any) =>
+                  handleItemChange('id', e.currentTarget.value, item)
+                }
+              />
+            </Form.Group>
+            <Form.Group className="mb-1" controlId="formBasicEmail">
+              <Form.Label>Amount</Form.Label>
+              <Form.Control
+                type="text"
+                value={item.amount}
+                placeholder="Enter quantity"
+                onChange={(e: any) =>
+                  handleItemChange('amount', e.currentTarget.value, item)
+                }
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicSelect">
-            <Form.Label>Device purpose</Form.Label>
-            <Form.Select
-              value={String(item.orderDevicePurpose)}
-              onChange={(e: any) =>
-                handleItemChange(
-                  'orderDevicePurpose',
-                  e.currentTarget.value,
-                  item,
-                )
-              }
+            <Form.Group className="mb-3" controlId="formBasicSelect">
+              <Form.Label>Device purpose</Form.Label>
+              <Form.Select
+                value={String(item.orderDevicePurpose)}
+                onChange={(e: any) =>
+                  handleItemChange(
+                    'orderDevicePurpose',
+                    e.currentTarget.value,
+                    item,
+                  )
+                }
+              >
+                <option value={OrderDevicePurposeMap.INSTALLATION}>
+                  {OrderDevicePurposeMap.INSTALLATION}
+                </option>
+                <option value={OrderDevicePurposeMap.MAINTENANCE}>
+                  {OrderDevicePurposeMap.MAINTENANCE}
+                </option>
+                <option value={OrderDevicePurposeMap.PURCHASE}>
+                  {OrderDevicePurposeMap.PURCHASE}
+                </option>
+                <option value={OrderDevicePurposeMap.RECONFIGURATION}>
+                  {OrderDevicePurposeMap.RECONFIGURATION}
+                </option>
+                <option value={OrderDevicePurposeMap.REPLACING}>
+                  {OrderDevicePurposeMap.REPLACING}
+                </option>
+              </Form.Select>
+            </Form.Group>
+
+            <ButtonDelete
+              variant="outline-danger"
+              onClick={() => handleDeleteItem(item)}
             >
-              <option value={OrderDevicePurposeMap.INSTALLATION}>
-                {OrderDevicePurposeMap.INSTALLATION}
-              </option>
-              <option value={OrderDevicePurposeMap.MAINTENANCE}>
-                {OrderDevicePurposeMap.MAINTENANCE}
-              </option>
-              <option value={OrderDevicePurposeMap.PURCHASE}>
-                {OrderDevicePurposeMap.PURCHASE}
-              </option>
-              <option value={OrderDevicePurposeMap.RECONFIGURATION}>
-                {OrderDevicePurposeMap.RECONFIGURATION}
-              </option>
-              <option value={OrderDevicePurposeMap.REPLACING}>
-                {OrderDevicePurposeMap.REPLACING}
-              </option>
-            </Form.Select>
-          </Form.Group>
-
-          <ButtonDelete
-            variant="outline-danger"
-            onClick={() =>
-              setList(
-                R.filter<ItemType>(listItem => listItem.key !== item.key, list),
-              )
-            }
-          >
-            Delete
-          </ButtonDelete>
-        </ItemsWrapper>
-      ))}
+              Delete
+            </ButtonDelete>
+          </ItemsWrapper>
+        ))}
 
       <Button
         variant="outline-success"

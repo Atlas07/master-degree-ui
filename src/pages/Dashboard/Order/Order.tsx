@@ -80,21 +80,12 @@ const Order = () => {
               <Button
                 variant="outline-warning"
                 onClick={() => {
-                  // setSelectedMiningFarm(data.value);
-                  // setIsModalOpened(true);
+                  setSelectedOrder(data.value);
+                  setIsNewModalOpened(true);
                 }}
               >
                 Edit
               </Button>
-              {/* <Button
-                variant="outline-success"
-                onClick={() => {
-                  // setSelectedMiningFarm(data.value);
-                  // setIsDeleteModalOpened(true);
-                }}
-              >
-                Create
-              </Button> */}
             </TableControls>
           );
         },
@@ -293,8 +284,7 @@ const Order = () => {
                   setSelectedOrder(null);
                 }}
                 onSubmit={refetchOrders}
-                // @ts-ignore
-                initialValues={null}
+                initialValues={selectedOrder}
               />
 
               <ProcessModal

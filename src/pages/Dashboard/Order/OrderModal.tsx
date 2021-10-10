@@ -11,32 +11,56 @@ import {
   OrderDevicePurposeMap,
   OrderEntityType,
   OrderType,
+  updateOrder,
 } from '../../../services/api/order';
 import { initialOrderDefaultValues } from './columns';
 import OrderModalItem, { ItemType } from './OrderModalItem';
 
-const mapToOrderItems: (idName: string) => (list: any[]) => ItemType[] =
-  idName =>
-    // @ts-ignore
-    R.pipe(
-      R.map((item: any) => R.assoc('id', item[idName])),
-      R.map(R.assoc('key', nanoid())),
-      R.map(R.omit([idName])),
-    );
+const pickUpdateProps = R.pick([
+  'orderMiningFarms',
+  'orderMiningCoolingRacks',
+  'orderAirConditioningDevices',
+  'orderAirHandlingUnits',
+  'orderFanDs',
+]);
 
 const mapInitialValuesToState = (values: OrderType): ModalOrderType => ({
   ...values,
-  orderMiningFarms: mapToOrderItems('miningFarmId')(values.orderMiningFarms),
-  orderMiningCoolingRacks: mapToOrderItems('miningCoolingRackId')(
-    values.orderMiningCoolingRacks,
-  ),
-  orderAirConditioningDevices: mapToOrderItems('airConditioningDeviceId')(
-    values.orderAirConditioningDevices,
-  ),
-  orderAirHandlingUnits: mapToOrderItems('airHandlingUnitId')(
-    values.orderAirHandlingUnits,
-  ),
-  orderFanDs: mapToOrderItems('fanId')(values.orderFanDs),
+  orderMiningFarms: values.orderMiningFarms.map(item => ({
+    amount: item.amount,
+    orderDevicePurpose: item.orderDevicePurpose,
+    id: item.miningFarm.id,
+    key: nanoid(),
+    toDeleteFromOrder: false,
+  })),
+  orderMiningCoolingRacks: values.orderMiningCoolingRacks.map(item => ({
+    amount: item.amount,
+    orderDevicePurpose: item.orderDevicePurpose,
+    id: item.miningCooling.id,
+    key: nanoid(),
+    toDeleteFromOrder: false,
+  })),
+  orderAirConditioningDevices: values.orderAirConditioningDevices.map(item => ({
+    amount: item.amount,
+    orderDevicePurpose: item.orderDevicePurpose,
+    id: item.airConditioningDevice.id,
+    key: nanoid(),
+    toDeleteFromOrder: false,
+  })),
+  orderAirHandlingUnits: values.orderAirHandlingUnits.map(item => ({
+    amount: item.amount,
+    orderDevicePurpose: item.orderDevicePurpose,
+    id: item.airHandlingUnit.id,
+    key: nanoid(),
+    toDeleteFromOrder: false,
+  })),
+  orderFanDs: values.orderFanDs.map(item => ({
+    amount: item.amount,
+    orderDevicePurpose: item.orderDevicePurpose,
+    id: item.fan.id,
+    key: nanoid(),
+    toDeleteFromOrder: false,
+  })),
 });
 
 const mapToOrderCreateItem = (
@@ -59,6 +83,7 @@ const mapToOrderCreateItem = (
   [idName]: +data.id,
   amount: +data.amount,
   orderDevicePurpose: data.orderDevicePurpose,
+  toDeleteFromOrder: data.toDeleteFromOrder,
 });
 
 const mapStateToOrderCreateRequest = (
@@ -127,7 +152,25 @@ const OrderModal: FC<Props> = ({
 
     setIsValidated(true);
 
-    const request = createOrder(mapStateToOrderCreateRequest(values));
+    console.log({
+      initialValues,
+      values: pickUpdateProps(mapStateToOrderCreateRequest(values)),
+    });
+
+    const request = initialValues
+      ? updateOrder({
+          orderId: initialValues.orderId,
+          // @ts-ignore
+          ...R.pipe(
+            mapStateToOrderCreateRequest,
+            // @ts-ignore
+            pickUpdateProps,
+            // @ts-ignore
+          )(values),
+
+          // ...pickUpdateProps(mapStateToOrderCreateRequest(values)),
+        })
+      : createOrder(mapStateToOrderCreateRequest(values));
 
     request
       .then(onSubmit)
@@ -137,6 +180,14 @@ const OrderModal: FC<Props> = ({
         setError(err?.message ?? 'Unexpected error.'),
       );
   };
+
+  useEffect(() => {
+    setValues(
+      initialValues
+        ? mapInitialValuesToState(initialValues)
+        : initialOrderDefaultValues,
+    );
+  }, [initialValues]);
 
   return (
     <CenteredModal
@@ -151,6 +202,7 @@ const OrderModal: FC<Props> = ({
           <Form.Group className="mb-3" controlId="formBasicSelect">
             <Form.Label>Order type</Form.Label>
             <Form.Select
+              disabled={!!initialValues}
               value={String(values.orderType)}
               onChange={(e: any) =>
                 setValues(R.assoc('orderType', e.currentTarget.value))
@@ -176,6 +228,7 @@ const OrderModal: FC<Props> = ({
           <Form.Group className="mb-3" controlId="formBasicInput">
             <Form.Label>Comment</Form.Label>
             <Form.Control
+              disabled={!!initialValues}
               type="text"
               placeholder="Enter comment"
               value={values.actionComment}
@@ -187,6 +240,7 @@ const OrderModal: FC<Props> = ({
           <Form.Group className="mb-3" controlId="formBasicInput">
             <Form.Label>Assign to</Form.Label>
             <Form.Control
+              disabled={!!initialValues}
               type="text"
               placeholder="Enter waiting user to act"
               value={values.waitingActionUsername}
