@@ -11,8 +11,8 @@ const Login = () => {
   const history = useHistory();
   const location = useLocation();
   const { setAuthData } = useAuth();
-  const [username, setUsername] = useState('CATALOG_ADMIN_NEW');
-  const [password, setPassword] = useState('CATALOG_ADMIN_NEW');
+  const [username, setUsername] = useState('ORDER_ADMIN_NEW');
+  const [password, setPassword] = useState('ORDER_ADMIN_NEW');
   const [isValidated, setIsValidated] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

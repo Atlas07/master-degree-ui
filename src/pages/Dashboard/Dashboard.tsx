@@ -11,6 +11,7 @@ import CoolingRack from './CoolingRack';
 import Fan from './Fan';
 import Manufacter from './Manufacter';
 import MiningFarm from './MiningFarm';
+import OnPremiseOrder from './OnPremiseOrder';
 import Order from './Order';
 
 const Dashboard = () => {
@@ -41,6 +42,10 @@ const Dashboard = () => {
           component={AirHandlingUnit}
         />
         <Route path={`${Pages.DASHBOARD}/order`} component={Order} />
+        <Route
+          path={`${Pages.DASHBOARD}/on-premise-order`}
+          component={OnPremiseOrder}
+        />
       </Switch>
     </Wrapper>
   );

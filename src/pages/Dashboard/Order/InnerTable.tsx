@@ -9,7 +9,7 @@ type Props<T extends {}> = {
 };
 
 const InnerTable = <T extends {}>({ data, columns }: Props<T>) => {
-  const tableColumns = useMemo(() => columns, []);
+  const tableColumns = useMemo(() => columns, [JSON.stringify(columns)]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({

@@ -2,6 +2,7 @@ import * as R from 'ramda';
 
 import { DEFAULT_PARAMS, getQueryParams } from '../../utils';
 import authApi from './authApi';
+import { OrderDevicePurposeMap } from './order';
 
 export const fetchManufacters = (
   params?: RequestWithQueryType,
@@ -35,6 +36,8 @@ export type RequestWithQueryType = {
   sortBy: string;
   sortType: 'asc';
   count: number;
+  deviceType: string;
+  devicePurpose: OrderDevicePurposeMap;
 };
 
 export type ManufacterType = {

@@ -19,10 +19,10 @@ const formatViolationsErr = R.reduce<Violation, string>(
 
 const Signup = () => {
   const history = useHistory();
-  const [username, setUsername] = useState('CATALOG_ADMIN_NEW');
-  const [password, setPassword] = useState('CATALOG_ADMIN_NEW');
-  const [email, setEmail] = useState('CATALOG_ADMIN_NEW@gmail.com');
-  const [role, setRole] = useState<RoleType>(Roles.ROLE_CATALOG_ADMIN);
+  const [username, setUsername] = useState('ORDER_ADMIN_NEW');
+  const [password, setPassword] = useState('ORDER_ADMIN_NEW');
+  const [email, setEmail] = useState('ORDER_ADMIN_NEW@gmail.com');
+  const [role, setRole] = useState<RoleType>(Roles.ROLE_ORDER_ADMIN);
   const [isValidated, setIsValidated] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

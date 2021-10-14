@@ -73,10 +73,6 @@ const COLUMNS = [
     accessor: 'pumpConsumption',
   },
   {
-    Header: 'Water capacity',
-    accessor: 'waterCapacity',
-  },
-  {
     Header: 'Manufacter',
     accessor: 'manufacturer',
   },
@@ -97,6 +93,8 @@ const COLUMNS = [
     accessor: 'modifiedBy',
   },
 ];
+
+export const ALL_COLUMNS = COLUMNS.map(R.assoc('Cell', getOptionalTableValue));
 
 export const TABLE_COLUMNS = COLUMNS.filter(column =>
   ACTIVE_COLUMNS.includes(column.accessor),

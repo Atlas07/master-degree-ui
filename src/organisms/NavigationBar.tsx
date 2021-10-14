@@ -77,9 +77,13 @@ const NavigationBar: FC<Props> = () => {
               Air handiling unit
             </NavDropdown.Item>
           </NavDropdown>
-
           <Nav.Link onClick={() => history.push(`${Pages.DASHBOARD}/order`)}>
             Order
+          </Nav.Link>{' '}
+          <Nav.Link
+            onClick={() => history.push(`${Pages.DASHBOARD}/on-premise-order`)}
+          >
+            Processed devices
           </Nav.Link>
         </Nav>
 

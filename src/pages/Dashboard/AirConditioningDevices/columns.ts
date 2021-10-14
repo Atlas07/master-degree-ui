@@ -90,6 +90,8 @@ const COLUMNS = [
   },
 ];
 
+export const ALL_COLUMNS = COLUMNS.map(R.assoc('Cell', getOptionalTableValue));
+
 export const TABLE_COLUMNS = COLUMNS.filter(column =>
   ACTIVE_COLUMNS.includes(column.accessor),
 ).map(R.assoc('Cell', getOptionalTableValue));
