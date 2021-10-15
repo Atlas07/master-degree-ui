@@ -23,7 +23,7 @@ import InnerTable from '../Order/InnerTable';
 
 enum DeviceRequestMap {
   onPremiseMiningFarms = 'miningFarm',
-  onPremiseMiningCoolingRacks = 'miningCoolingRack',
+  onPremiseMiningCoolingRacks = 'miningCooling',
   onPremiseAirConditioningDevices = 'airConditioningDevice',
   onPremiseAirHandlingUnits = 'airHandlingUnit',
   onPremiseFans = 'fan',
@@ -160,10 +160,6 @@ const OnPremiseOrder = () => {
             ) ?? []
           }
           columns={[
-            {
-              Header: '#',
-              accessor: 'id',
-            },
             {
               Header: 'Amount',
               accessor: 'amount',
