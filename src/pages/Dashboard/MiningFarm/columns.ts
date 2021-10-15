@@ -26,6 +26,7 @@ export const initialDefaultValues: CreateMiningFarmType = {
 };
 
 const ACTIVE_COLUMNS = [
+  'id',
   'model',
   'alsowAsKnownAs',
   'releaseDate',
@@ -49,6 +50,10 @@ const EXCLUDE_ON_PREMISE_COLUNS = [
 const MODAL_FIELDS = R.keys(initialDefaultValues) as string[];
 
 const COLUMNS = [
+  {
+    Header: '#',
+    accessor: 'id',
+  },
   {
     Header: 'Model',
     accessor: 'model',

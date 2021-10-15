@@ -37,7 +37,6 @@ const CoolingRack = () => {
 
   const columns: MiningFarmCellType[] = useMemo(
     () => [
-      ...(TABLE_COLUMNS as MiningFarmCellType[]),
       {
         id: 'controls',
         Header: '',
@@ -65,6 +64,7 @@ const CoolingRack = () => {
           </TableControls>
         ),
       },
+      ...(TABLE_COLUMNS as MiningFarmCellType[]),
     ],
     [],
   );

@@ -34,7 +34,6 @@ const AirHandlingUtit = () => {
 
   const columns: CellType[] = useMemo(
     () => [
-      ...(TABLE_COLUMNS as CellType[]),
       {
         id: 'controls',
         Header: '',
@@ -62,6 +61,7 @@ const AirHandlingUtit = () => {
           </TableControls>
         ),
       },
+      ...(TABLE_COLUMNS as CellType[]),
     ],
     [],
   );

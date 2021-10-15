@@ -37,28 +37,6 @@ const Manufacter = () => {
   const columns: ManufacterCellType[] = useMemo(
     () => [
       {
-        Header: 'Name',
-        accessor: 'name',
-      },
-      {
-        Header: 'Created by',
-        accessor: 'createdBy',
-      },
-      {
-        Header: 'Created when',
-        accessor: 'createdWhen',
-      },
-      {
-        Header: 'Modified by',
-        accessor: 'modifiedBy',
-        Cell: ({ value }) => (R.isEmpty(value) ? '-' : value),
-      },
-      {
-        Header: 'modified when',
-        accessor: 'modifiedWhen',
-        Cell: ({ value }) => (R.isEmpty(value) ? '-' : value),
-      },
-      {
         id: 'controls',
         Header: '',
         accessor: manufacter => manufacter,
@@ -84,6 +62,32 @@ const Manufacter = () => {
             </Button>
           </TableControls>
         ),
+      },
+      {
+        Header: '#',
+        accessor: 'id',
+      },
+      {
+        Header: 'Name',
+        accessor: 'name',
+      },
+      {
+        Header: 'Created by',
+        accessor: 'createdBy',
+      },
+      {
+        Header: 'Created when',
+        accessor: 'createdWhen',
+      },
+      {
+        Header: 'Modified by',
+        accessor: 'modifiedBy',
+        Cell: ({ value }) => (R.isEmpty(value) ? '-' : value),
+      },
+      {
+        Header: 'modified when',
+        accessor: 'modifiedWhen',
+        Cell: ({ value }) => (R.isEmpty(value) ? '-' : value),
       },
     ],
     [],

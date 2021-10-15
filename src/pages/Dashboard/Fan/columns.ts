@@ -3,6 +3,7 @@ import * as R from 'ramda';
 import { getOptionalTableValue } from '../../../utils';
 
 const ACTIVE_COLUMNS = [
+  'id',
   'model',
   'weight',
   'size',
@@ -31,6 +32,10 @@ const EXCLUDE_ON_PREMISE_COLUNS = [
 ];
 
 const COLUMNS = [
+  {
+    Header: '#',
+    accessor: 'id',
+  },
   {
     Header: 'Model',
     accessor: 'model',

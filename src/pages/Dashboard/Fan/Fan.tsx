@@ -32,7 +32,6 @@ const MiningFarm = () => {
 
   const columns: CellType[] = useMemo(
     () => [
-      ...(TABLE_COLUMNS as CellType[]),
       {
         id: 'controls',
         Header: '',
@@ -60,6 +59,7 @@ const MiningFarm = () => {
           </TableControls>
         ),
       },
+      ...(TABLE_COLUMNS as CellType[]),
     ],
     [],
   );

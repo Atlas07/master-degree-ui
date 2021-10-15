@@ -84,16 +84,6 @@ const ManufacterModal: FC<Props> = ({
                 Please provide a name.
               </Form.Control.Feedback>
             </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Created by</Form.Label>
-              <Form.Control
-                disabled
-                type="text"
-                placeholder="Created by"
-                value="catalogAdmin"
-              />
-            </Form.Group>
           </Form>
           {error && <Alert variant="danger">{error}</Alert>}
         </>
