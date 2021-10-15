@@ -143,7 +143,7 @@ const OnPremiseOrder = () => {
       )}
 
       {/* @ts-ignore */}
-      {!error && devices?.[activeDevice] && (
+      {!error && devices?.[activeDevice].length > 0 && (
         <InnerTable<
           { amount: number; id: number } & (
             | MiningFarmType

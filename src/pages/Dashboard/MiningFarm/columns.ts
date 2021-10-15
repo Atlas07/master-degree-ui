@@ -39,6 +39,13 @@ const ACTIVE_COLUMNS = [
   'modifiedBy',
 ];
 
+const EXCLUDE_ON_PREMISE_COLUNS = [
+  'createdWhen',
+  'createdBy',
+  'modifiedWhen',
+  'modifiedBy',
+];
+
 const MODAL_FIELDS = R.keys(initialDefaultValues) as string[];
 
 const COLUMNS = [
@@ -128,7 +135,9 @@ const COLUMNS = [
   },
 ];
 
-export const ALL_COLUMNS = COLUMNS.map(R.assoc('Cell', getOptionalTableValue));
+export const ALL_COLUMNS = COLUMNS.filter(
+  column => !EXCLUDE_ON_PREMISE_COLUNS.includes(column.accessor),
+).map(R.assoc('Cell', getOptionalTableValue));
 
 export const TABLE_COLUMNS = COLUMNS.filter(column =>
   ACTIVE_COLUMNS.includes(column.accessor),

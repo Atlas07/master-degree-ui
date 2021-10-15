@@ -23,6 +23,13 @@ const MODAL_FIELDS_TO_HIDE = [
   'modifiedBy',
 ];
 
+const EXCLUDE_ON_PREMISE_COLUNS = [
+  'createdWhen',
+  'createdBy',
+  'modifiedWhen',
+  'modifiedBy',
+];
+
 const COLUMNS = [
   {
     Header: 'Model',
@@ -94,7 +101,9 @@ const COLUMNS = [
   },
 ];
 
-export const ALL_COLUMNS = COLUMNS.map(R.assoc('Cell', getOptionalTableValue));
+export const ALL_COLUMNS = COLUMNS.filter(
+  column => !EXCLUDE_ON_PREMISE_COLUNS.includes(column.accessor),
+).map(R.assoc('Cell', getOptionalTableValue));
 
 export const TABLE_COLUMNS = COLUMNS.filter(column =>
   ACTIVE_COLUMNS.includes(column.accessor),
