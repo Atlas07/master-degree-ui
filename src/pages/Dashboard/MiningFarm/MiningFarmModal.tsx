@@ -1,9 +1,13 @@
 import * as R from 'ramda';
 import { FC, FormEvent, useEffect, useState } from 'react';
-import { Alert, Form } from 'react-bootstrap';
+import { Alert, Form, Spinner } from 'react-bootstrap';
 
 import CenteredModal from '../../../molecules/CenteredModal';
 import { ErrorResponse } from '../../../services/api/guestApi';
+import {
+  fetchManufacters,
+  ManufacterType,
+} from '../../../services/api/manufacter';
 import {
   createMiningFarm,
   CreateMiningFarmType,
@@ -25,6 +29,9 @@ const MiningFarmModal: FC<Props> = ({
   onSubmit,
   initialValues,
 }) => {
+  const [manufactures, setManufactures] = useState<ManufacterType[] | null>(
+    null,
+  );
   const [values, setValues] = useState<CreateMiningFarmType>(
     initialValues ?? initialDefaultValues,
   );
@@ -60,6 +67,10 @@ const MiningFarmModal: FC<Props> = ({
     setValues(initialValues ?? initialDefaultValues);
   }, [initialValues]);
 
+  useEffect(() => {
+    fetchManufacters().then(setManufactures);
+  }, []);
+
   return (
     <CenteredModal
       title={`${initialValues ? 'Edit' : 'Add'} mining farm`}
@@ -70,22 +81,45 @@ const MiningFarmModal: FC<Props> = ({
       isPrimaryButtonDisabled={false} // TODO
       content={
         <>
-          <Form noValidate validated={isValidated}>
-            {MODAL_INPUTS.map(input => (
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>{input.Header}</Form.Label>
-                <Form.Control
-                  type="text"
-                  // @ts-ignore
-                  value={values[input.accessor]}
-                  onChange={e =>
-                    setValues(R.assoc(input.accessor, e.currentTarget.value))
-                  }
-                  required
-                />
+          {manufactures === null && <Spinner animation="border" />}
+
+          {manufactures !== null && (
+            <Form noValidate validated={isValidated}>
+              {MODAL_INPUTS.map(input => (
+                <Form.Group
+                  className="mb-3"
+                  controlId="formBasicEmail"
+                  key={input.accessor}
+                >
+                  <Form.Label>{input.Header}</Form.Label>
+                  <Form.Control
+                    type="text"
+                    // @ts-ignore
+                    value={values[input.accessor]}
+                    onChange={e =>
+                      setValues(R.assoc(input.accessor, e.currentTarget.value))
+                    }
+                    required
+                  />
+                </Form.Group>
+              ))}
+
+              <Form.Group className="mb-3" controlId="formBasicSelect">
+                <Form.Label>Manufacturer</Form.Label>
+                <Form.Select
+                  value={values.manufacturer}
+                  onChange={(e: any) => setValues(e.currentTarget.value)}
+                >
+                  {manufactures.map(manufacturer => (
+                    <option value={manufacturer.name} key={manufacturer.id}>
+                      {manufacturer.name}
+                    </option>
+                  ))}
+                </Form.Select>
               </Form.Group>
-            ))}
-          </Form>
+            </Form>
+          )}
+
           {error && <Alert variant="danger">{error}</Alert>}
         </>
       }

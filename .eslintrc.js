@@ -10,6 +10,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   ignorePatterns: ['*.d.ts'],
   rules: {
+    'react/destructuring-assignment': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
     'import/prefer-default-export': 'off',
     'react/require-default-props': 'off',

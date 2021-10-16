@@ -1,7 +1,11 @@
 import { format } from 'date-fns';
 import * as R from 'ramda';
+import { CellProps } from 'react-table';
 
-import { CreateMiningFarmType } from '../../../services/api/miningFarm';
+import {
+  CreateMiningFarmType,
+  MiningFarmType,
+} from '../../../services/api/miningFarm';
 import { getOptionalTableValue } from '../../../utils';
 
 export const initialDefaultValues: CreateMiningFarmType = {
@@ -34,6 +38,7 @@ const ACTIVE_COLUMNS = [
   'weight',
   'power',
   'priceUsd',
+  'manufacturer',
   'createdWhen',
   'createdBy',
   'modifiedWhen',
@@ -123,10 +128,6 @@ const COLUMNS = [
     accessor: 'priceUsd',
   },
   {
-    Header: 'Manufacter',
-    accessor: 'manufacturer',
-  },
-  {
     Header: 'Created when',
     accessor: 'createdWhen',
   },
@@ -148,6 +149,16 @@ export const TABLE_COLUMNS = COLUMNS.filter(column =>
   ACTIVE_COLUMNS.includes(column.accessor),
 ).map(R.assoc('Cell', getOptionalTableValue));
 
-export const MODAL_INPUTS = COLUMNS.filter(column =>
-  MODAL_FIELDS.includes(column.accessor),
-);
+export const MODAL_INPUTS = [
+  ...COLUMNS.filter(column => MODAL_FIELDS.includes(column.accessor)),
+  // {
+  //   Header: 'Manufacturer',
+  //   accessor: 'manufacturer',
+  //   Cell: (data: CellProps<MiningFarmType, MiningFarmType>) => {
+  //     console.log(data);
+  //     return (
+  //       <p>{data.name}</p>
+  //     );
+  //   },
+  // },
+];

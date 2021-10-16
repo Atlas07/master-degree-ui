@@ -63,7 +63,7 @@ export type MiningFarmType = {
   temperature: string;
   humidity: string;
   priceUsd: number;
-  manufacturer: string; // TODO: Partial<ManufacterType>;
+  manufacturer: string;
   createdWhen: string;
   createdBy: string;
   modifiedWhen: string;
