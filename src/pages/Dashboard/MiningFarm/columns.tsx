@@ -1,11 +1,7 @@
 import { format } from 'date-fns';
 import * as R from 'ramda';
-import { CellProps } from 'react-table';
 
-import {
-  CreateMiningFarmType,
-  MiningFarmType,
-} from '../../../services/api/miningFarm';
+import { CreateMiningFarmType } from '../../../services/api/miningFarm';
 import { getOptionalTableValue } from '../../../utils';
 
 export const initialDefaultValues: CreateMiningFarmType = {
@@ -52,7 +48,25 @@ const EXCLUDE_ON_PREMISE_COLUNS = [
   'modifiedBy',
 ];
 
-const MODAL_FIELDS = R.keys(initialDefaultValues) as string[];
+const MODAL_FIELDS = [
+  'model',
+  'alsowAsKnownAs',
+  'releaseDate',
+  'size',
+  'weight',
+  'noiseLevel',
+  'fans',
+  'chipCount',
+  'rackFormat',
+  'cooling',
+  'power',
+  'voltage',
+  'interfaceName',
+  'memory',
+  'temperature',
+  'humidity',
+  'priceUsd',
+];
 
 const COLUMNS = [
   {
@@ -128,6 +142,10 @@ const COLUMNS = [
     accessor: 'priceUsd',
   },
   {
+    Header: 'Manufacturer',
+    accessor: 'manufacturer',
+  },
+  {
     Header: 'Created when',
     accessor: 'createdWhen',
   },
@@ -151,14 +169,4 @@ export const TABLE_COLUMNS = COLUMNS.filter(column =>
 
 export const MODAL_INPUTS = [
   ...COLUMNS.filter(column => MODAL_FIELDS.includes(column.accessor)),
-  // {
-  //   Header: 'Manufacturer',
-  //   accessor: 'manufacturer',
-  //   Cell: (data: CellProps<MiningFarmType, MiningFarmType>) => {
-  //     console.log(data);
-  //     return (
-  //       <p>{data.name}</p>
-  //     );
-  //   },
-  // },
 ];

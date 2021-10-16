@@ -18,6 +18,7 @@ const ACTIVE_COLUMNS = [
 
 const MODAL_FIELDS_TO_HIDE = [
   'id',
+  'manufacturer',
   'createdWhen',
   'createdBy',
   'modifiedWhen',

@@ -108,7 +108,9 @@ const MiningFarmModal: FC<Props> = ({
                 <Form.Label>Manufacturer</Form.Label>
                 <Form.Select
                   value={values.manufacturer}
-                  onChange={(e: any) => setValues(e.currentTarget.value)}
+                  onChange={(e: any) =>
+                    setValues(R.assoc('manufacturer', e.currentTarget.value))
+                  }
                 >
                   {manufactures.map(manufacturer => (
                     <option value={manufacturer.name} key={manufacturer.id}>
