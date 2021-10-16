@@ -50,7 +50,7 @@ const concatOnPremiseEntity =
     // eslint-disable-next-line react/destructuring-assignment
     amount: data.amount,
     // eslint-disable-next-line react/destructuring-assignment
-    manufacturer: data?.[entityName].manufacturer.id ?? null,
+    manufacturer: data?.[entityName].manufacturer.name ?? null,
     // eslint-disable-next-line react/destructuring-assignment
     ...R.omit(['manufacturer'], data[entityName]),
   });
