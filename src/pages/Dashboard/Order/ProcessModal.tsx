@@ -1,6 +1,7 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
-import { Alert, Form } from 'react-bootstrap';
+import { Alert, Button, Form } from 'react-bootstrap';
 
+import { useAuth } from '../../../contexts/authContext';
 import CenteredModal from '../../../molecules/CenteredModal';
 import { ErrorResponse } from '../../../services/api/guestApi';
 import {
@@ -54,6 +55,7 @@ const StatusMap = {
 };
 
 const ProcessModal: FC<Props> = ({ isOpen, onClose, onSubmit, values }) => {
+  const { auth } = useAuth();
   const [status, setStatus] = useState(values?.status);
   const [actionComment, setActionComment] = useState('');
   const [waitingActionUsername, setWaitingActionUsername] = useState('');
@@ -134,6 +136,16 @@ const ProcessModal: FC<Props> = ({ isOpen, onClose, onSubmit, values }) => {
                   setWaitingActionUsername(e.currentTarget.value)
                 }
               />
+            </Form.Group>
+
+            <Form.Group>
+              <Button
+                onClick={() =>
+                  setWaitingActionUsername(auth?.username as string)
+                }
+              >
+                Assign on me
+              </Button>
             </Form.Group>
 
             {error && <Alert variant="danger">{error}</Alert>}
