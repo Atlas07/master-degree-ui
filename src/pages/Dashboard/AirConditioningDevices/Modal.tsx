@@ -7,6 +7,7 @@ import {
   AirConditioningDeviceType,
   createAirConditioningDevice,
   CreateAirConditioningDeviceType,
+  DeviceMap,
   updateAirConditioningDevice,
 } from '../../../services/api/airConditioningDevice';
 import { ErrorResponse } from '../../../services/api/guestApi';
@@ -28,7 +29,10 @@ const Modal: FC<Props> = ({ isOpen, onClose, onSubmit, initialValues }) => {
     null,
   );
   const [values, setValues] = useState<CreateAirConditioningDeviceType>(
-    initialValues ?? initialDefaultValues,
+    initialValues ?? {
+      ...initialDefaultValues,
+      airConditioningDevice: DeviceMap.CANAL,
+    },
   );
   const [error, setError] = useState<string | null>(null);
   const [isValidated, setIsValidated] = useState(false);
@@ -94,6 +98,23 @@ const Modal: FC<Props> = ({ isOpen, onClose, onSubmit, initialValues }) => {
                   />
                 </Form.Group>
               ))}
+
+              <Form.Group className="mb-3" controlId="formBasicSelect">
+                <Form.Label>Air conditioning device</Form.Label>
+                <Form.Select
+                  value={values.airConditioningDevice}
+                  onChange={(e: any) =>
+                    setValues(
+                      R.assoc('airConditioningDevice', e.currentTarget.value),
+                    )
+                  }
+                >
+                  <option value={DeviceMap.CANAL}>{DeviceMap.CANAL}</option>
+                  <option value={DeviceMap.SPLIT_SYSTEM}>
+                    {DeviceMap.SPLIT_SYSTEM}
+                  </option>
+                </Form.Select>
+              </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicSelect">
                 <Form.Label>Manufacturer</Form.Label>

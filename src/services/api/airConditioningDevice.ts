@@ -54,7 +54,7 @@ export type AirConditioningDeviceType = {
   voltage: string;
   priceUsd: number;
   webReference: string;
-  airConditioningDevice: DeviceType;
+  airConditioningDevice: DeviceMap;
   coolingCapacity: string;
   roomAreaSquareM: number;
   manufacturer: string; // TODO: ManufacturerType
@@ -64,7 +64,10 @@ export type AirConditioningDeviceType = {
   modifiedBy: string;
 };
 
-export type DeviceType = 'SPLIT_SYSTEM' | 'CANAL';
+export enum DeviceMap {
+  SPLIT_SYSTEM = 'SPLIT_SYSTEM',
+  CANAL = 'CANAL',
+}
 
 export type CreateAirConditioningDeviceType = Partial<
   Omit<AirConditioningDeviceType, 'id'>

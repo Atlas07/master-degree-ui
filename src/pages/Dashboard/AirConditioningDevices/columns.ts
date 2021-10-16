@@ -23,6 +23,7 @@ const MODAL_FIELDS_TO_HIDE = [
   'modifiedWhen',
   'modifiedBy',
   'manufacturer',
+  'airConditioningDevice',
 ];
 
 const EXCLUDE_ON_PREMISE_COLUNS = [
