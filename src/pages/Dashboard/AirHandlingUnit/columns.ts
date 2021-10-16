@@ -22,6 +22,7 @@ const MODAL_FIELDS_TO_HIDE = [
   'createdBy',
   'modifiedWhen',
   'modifiedBy',
+  'manufacturer',
 ];
 
 const EXCLUDE_ON_PREMISE_COLUNS = [
