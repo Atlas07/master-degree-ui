@@ -4,6 +4,11 @@ import { FC } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 
+import { AirConditioningDeviceType } from '../../../services/api/airConditioningDevice';
+import { AirHandlingUnitType } from '../../../services/api/airHandlingUtit';
+import { CoolingRackType } from '../../../services/api/coolingRack';
+import { FanType } from '../../../services/api/fan';
+import { MiningFarmType } from '../../../services/api/miningFarm';
 import {
   OrderDevicePurposeMap,
   OrderEntityType,
@@ -14,6 +19,13 @@ type Props = {
   className?: string;
   list: ItemType[];
   setList: Function;
+  // TODO: refactor
+  options:
+    | MiningFarmType[]
+    | CoolingRackType[]
+    | AirConditioningDeviceType[]
+    | AirHandlingUnitType[]
+    | FanType[];
 };
 
 export type ItemType = OrderEntityType<'id', number> & {
@@ -22,7 +34,7 @@ export type ItemType = OrderEntityType<'id', number> & {
 };
 
 const createEmptyItem = (): ItemType => ({
-  id: 0,
+  id: 1,
   amount: 0,
   orderDevicePurpose: OrderDevicePurposeMap.INSTALLATION,
   key: nanoid(),
@@ -35,6 +47,7 @@ const OrderModalItem: FC<Props> = ({
   setList,
   label,
   className = '',
+  options,
 }) => {
   const handleItemChange = (
     key: 'id' | 'amount' | 'orderDevicePurpose',
@@ -85,17 +98,22 @@ const OrderModalItem: FC<Props> = ({
         .filter(item => item.toDeleteFromOrder !== true)
         .map(item => (
           <ItemsWrapper key={item.key}>
-            <Form.Group className="mb-1" controlId="formBasicEmail">
-              <Form.Label>Id</Form.Label>
-              <Form.Control
-                type="text"
+            <Form.Group className="mb-3" controlId="formBasicSelect">
+              <Form.Label>Name</Form.Label>
+              <Form.Select
                 value={item.id}
-                placeholder="Enter id"
                 onChange={(e: any) =>
                   handleItemChange('id', e.currentTarget.value, item)
                 }
-              />
+              >
+                {options.map(option => (
+                  <option value={option.id} key={option.id}>
+                    {option.model}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
+
             <Form.Group className="mb-1" controlId="formBasicEmail">
               <Form.Label>Amount</Form.Label>
               <Form.Control

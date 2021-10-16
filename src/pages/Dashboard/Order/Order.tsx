@@ -24,7 +24,6 @@ import {
   OrderType,
 } from '../../../services/api/order';
 import {
-  COLUMNS,
   ORDER_ACTION_HISTORY_COLUMNS,
   ORDER_AIR_CONDITION_DEVICE_COLUMNS,
   ORDER_AIR_HANDLING_UNIT_COLUMNS,
@@ -39,8 +38,6 @@ import ProcessModal from './ProcessModal';
 
 type CellType = Column<OrderType>;
 type ActionCellType = CellProps<OrderType, OrderType>;
-
-const tableFilters = R.pluck('accessor', COLUMNS);
 
 const Order = () => {
   const [orders, setOrders] = useState<OrderType[] | null>(null);
@@ -220,13 +217,31 @@ const Order = () => {
   const handleSearchSubmit = () => {
     setError(null);
 
-    findOrders(search).then(setOrders).catch(setError);
+    findOrders(search)
+      .then(setOrders)
+      .catch(err => {
+        if (err.status === 403) {
+          setError({ ...err, message: 'No permissions for this page' });
+          return;
+        }
+
+        setError(err ?? 'Unexpected error.');
+      });
   };
 
   const refetchOrders = () => {
     setError(null);
 
-    return fetchOrders({ sortBy: 'orderId' }).then(setOrders).catch(setError);
+    return fetchOrders({ sortBy: 'orderId' })
+      .then(setOrders)
+      .catch(err => {
+        if (err.status === 403) {
+          setError({ ...err, message: 'No permissions for this page' });
+          return;
+        }
+
+        setError(err ?? 'Unexpected error.');
+      });
   };
 
   useEffect(() => {
@@ -262,9 +277,9 @@ const Order = () => {
 
       {error && <Alert variant="danger">{error.message}</Alert>}
 
-      {orders === null && <Spinner animation="border" />}
+      {!error && orders === null && <Spinner animation="border" />}
 
-      {orders?.length === 0 && (
+      {!error && orders?.length === 0 && (
         <Alert variant="primary">There are no orders.</Alert>
       )}
 

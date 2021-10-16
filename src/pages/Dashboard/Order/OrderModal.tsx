@@ -4,7 +4,24 @@ import { FC, FormEvent, useEffect, useState } from 'react';
 import { Alert, Form } from 'react-bootstrap';
 
 import CenteredModal from '../../../molecules/CenteredModal';
+import {
+  AirConditioningDeviceType,
+  fetchAirConditioningDevices,
+} from '../../../services/api/airConditioningDevice';
+import {
+  AirHandlingUnitType,
+  fetchAirHandlingUnits,
+} from '../../../services/api/airHandlingUtit';
+import {
+  CoolingRackType,
+  fetchCoolingRacks,
+} from '../../../services/api/coolingRack';
+import { FanType, fetchFans } from '../../../services/api/fan';
 import { ErrorResponse } from '../../../services/api/guestApi';
+import {
+  fetchMiningFarms,
+  MiningFarmType,
+} from '../../../services/api/miningFarm';
 import {
   createOrder,
   CreateOrderType,
@@ -139,6 +156,17 @@ const OrderModal: FC<Props> = ({
   );
   const [error, setError] = useState<string | null>(null);
   const [isValidated, setIsValidated] = useState(false);
+  const [miningFarms, setMiningFarms] = useState<MiningFarmType[] | null>(null);
+  const [coolingRacks, setCoolingRacks] = useState<CoolingRackType[] | null>(
+    null,
+  );
+  const [airConditioningDevices, setAirConditioningDevices] = useState<
+    AirConditioningDeviceType[] | null
+  >(null);
+  const [airHandlingUnits, setAirHandlingUnits] = useState<
+    AirHandlingUnitType[] | null
+  >(null);
+  const [fans, setFans] = useState<FanType[] | null>(null);
 
   const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -151,11 +179,6 @@ const OrderModal: FC<Props> = ({
     }
 
     setIsValidated(true);
-
-    console.log({
-      initialValues,
-      values: pickUpdateProps(mapStateToOrderCreateRequest(values)),
-    });
 
     const request = initialValues
       ? updateOrder({
@@ -188,6 +211,16 @@ const OrderModal: FC<Props> = ({
         : initialOrderDefaultValues,
     );
   }, [initialValues]);
+
+  useEffect(() => {
+    fetchMiningFarms().then(setMiningFarms).catch(setError);
+    fetchCoolingRacks().then(setCoolingRacks).catch(setError);
+    fetchAirConditioningDevices()
+      .then(setAirConditioningDevices)
+      .catch(setError);
+    fetchAirHandlingUnits().then(setAirHandlingUnits).catch(setError);
+    fetchFans().then(setFans).catch(setError);
+  }, []);
 
   return (
     <CenteredModal
@@ -252,50 +285,65 @@ const OrderModal: FC<Props> = ({
             />
           </Form.Group>
 
-          <OrderModalItem
-            className="mb-3"
-            label="Mining cooling racks"
-            list={values.orderMiningCoolingRacks}
-            setList={(newList: ItemType[]) =>
-              setValues(R.assoc('orderMiningCoolingRacks', newList))
-            }
-          />
+          {coolingRacks !== null && (
+            <OrderModalItem
+              className="mb-3"
+              label="Mining cooling racks"
+              options={coolingRacks}
+              list={values.orderMiningCoolingRacks}
+              setList={(newList: ItemType[]) =>
+                setValues(R.assoc('orderMiningCoolingRacks', newList))
+              }
+            />
+          )}
 
-          <OrderModalItem
-            className="mb-3"
-            label="Mining farms"
-            list={values.orderMiningFarms}
-            setList={(newList: ItemType[]) =>
-              setValues(R.assoc('orderMiningFarms', newList))
-            }
-          />
+          {miningFarms !== null && (
+            <OrderModalItem
+              className="mb-3"
+              label="Mining farms"
+              options={miningFarms}
+              list={values.orderMiningFarms}
+              setList={(newList: ItemType[]) =>
+                setValues(R.assoc('orderMiningFarms', newList))
+              }
+            />
+          )}
 
-          <OrderModalItem
-            className="mb-3"
-            label="Air conditioning devices"
-            list={values.orderAirConditioningDevices}
-            setList={(newList: ItemType[]) =>
-              setValues(R.assoc('orderAirConditioningDevices', newList))
-            }
-          />
+          {airConditioningDevices !== null && (
+            <OrderModalItem
+              className="mb-3"
+              label="Air conditioning devices"
+              options={airConditioningDevices}
+              list={values.orderAirConditioningDevices}
+              setList={(newList: ItemType[]) =>
+                setValues(R.assoc('orderAirConditioningDevices', newList))
+              }
+            />
+          )}
 
-          <OrderModalItem
-            className="mb-3"
-            label="Air handling units"
-            list={values.orderAirHandlingUnits}
-            setList={(newList: ItemType[]) =>
-              setValues(R.assoc('orderAirHandlingUnits', newList))
-            }
-          />
+          {airHandlingUnits !== null && (
+            <OrderModalItem
+              className="mb-3"
+              label="Air handling units"
+              options={airHandlingUnits}
+              list={values.orderAirHandlingUnits}
+              setList={(newList: ItemType[]) =>
+                setValues(R.assoc('orderAirHandlingUnits', newList))
+              }
+            />
+          )}
 
-          <OrderModalItem
-            className="mb-3"
-            label="Fan ds"
-            list={values.orderFanDs}
-            setList={(newList: ItemType[]) =>
-              setValues(R.assoc('orderFanDs', newList))
-            }
-          />
+          {fans !== null && (
+            <OrderModalItem
+              className="mb-3"
+              label="Fan ds"
+              options={fans}
+              list={values.orderFanDs}
+              setList={(newList: ItemType[]) =>
+                setValues(R.assoc('orderFanDs', newList))
+              }
+            />
+          )}
 
           {error && <Alert variant="danger">{error}</Alert>}
         </>
